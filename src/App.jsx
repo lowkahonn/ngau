@@ -26,12 +26,12 @@ const I18N = {
     resultTitle: "計算結果",
     bestResult: "最佳結果",
     noResultTitle: "找不到合法排法",
-    noResultBody: "目前這 5 張牌無法排出底為 10 的倍數。",
+    noResultBody: "目前這 5 張牌無法排出符合底牌條件（可整除 10）的組合。",
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
     assumedTitle: "A 假設排法（A 當黑桃 A）",
-    assumedMissing: "無法排出牛冬菇（需 A + J/Q/K 且底為 10 的倍數）。",
-    handLine: (name, points, mult) => `牌型：${name} ｜ 點數：${points} ｜ 倍數：${mult}倍`,
+    assumedMissing: "無法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
+    handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
     rulesTitle: "Gnau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
     rulesBody2: "適合快速試算與排牌練習。"
@@ -50,12 +50,12 @@ const I18N = {
     resultTitle: "计算结果",
     bestResult: "最佳结果",
     noResultTitle: "找不到合法排法",
-    noResultBody: "当前这 5 张牌无法排出底为 10 的倍数。",
+    noResultBody: "当前这 5 张牌无法排出符合底牌条件（可整除 10）的组合。",
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
     assumedTitle: "A 假设排法（A 当黑桃 A）",
-    assumedMissing: "无法排出牛冬菇（需 A + J/Q/K 且底为 10 的倍数）。",
-    handLine: (name, points, mult) => `牌型：${name} ｜ 点数：${points} ｜ 倍数：${mult}倍`,
+    assumedMissing: "无法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
+    handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
     rulesTitle: "Gnau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
     rulesBody2: "适合快速试算与排牌练习。"
@@ -74,12 +74,12 @@ const I18N = {
     resultTitle: "Result",
     bestResult: "Best Result",
     noResultTitle: "No valid arrangement",
-    noResultBody: "These 5 cards cannot form a valid base that is a multiple of 10.",
+    noResultBody: "These 5 cards cannot form a valid base that is divisible by 10.",
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
     assumedTitle: "Ace Assumed Combo (A as Spade Ace)",
-    assumedMissing: "No Niu Dong Gu combo found (requires A + J/Q/K and valid base).",
-    handLine: (name, points, mult) => `Type: ${name} | Points: ${points} | Multiplier: ${mult}x`,
+    assumedMissing: "No Niu Dong Gu combo found (requires A + J/Q/K and base divisible by 10).",
+    handLine: (name, points) => `Type: ${name} | Points: ${points}`,
     rulesTitle: "Gnau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
     rulesBody2: "Built for quick checking and practice."
@@ -162,17 +162,14 @@ function ResultPanel({ result, t, language, isLight }) {
       <article className={isLight ? "rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "rounded-3xl border border-white/20 bg-white/10 p-4 shadow-panel backdrop-blur-md"}>
         <div className="mb-3 flex items-center justify-between">
           <h2 className={isLight ? "font-title text-lg tracking-[0.06em] text-slate-900" : "font-title text-lg tracking-[0.06em] text-white"}>{t.bestResult}</h2>
-          <span className={isLight ? "rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-emerald-300/20 px-3 py-1 text-xs font-semibold text-emerald-100"}>
-            {language === "en" ? `${best.multiplier}x` : `${best.multiplier}倍`}
-          </span>
         </div>
 
         {best.name === "五張公" ? (
-          <p className={isLight ? "mt-3 text-sm text-slate-800" : "mt-3 text-sm text-emerald-50"}>{t.handLine(localizeHandName("五張公", language), best.points, best.multiplier)}</p>
+          <p className={isLight ? "mt-3 text-sm text-slate-800" : "mt-3 text-sm text-emerald-50"}>{t.handLine(localizeHandName("五張公", language), best.points)}</p>
         ) : (
           <div className="mt-3 space-y-3">
             <ArrangementRows pointCards={pointCards} baseCards={baseCards} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
-            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handLine(localizeHandName(best.name, language), best.points, best.multiplier)}</p>
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handLine(localizeHandName(best.name, language), best.points)}</p>
           </div>
         )}
       </article>
@@ -185,7 +182,7 @@ function ResultPanel({ result, t, language, isLight }) {
           ) : (
             <div className="mt-3 space-y-3">
               <ArrangementRows pointCards={assumedPoint} baseCards={assumedBase} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
-              <p className={isLight ? "text-sm text-amber-900" : "text-sm text-amber-50"}>{t.handLine(localizeHandName("牛冬菇", language), 1, 7)}</p>
+              <p className={isLight ? "text-sm text-amber-900" : "text-sm text-amber-50"}>{t.handLine(localizeHandName("牛冬菇", language), 1)}</p>
             </div>
           )}
         </article>
