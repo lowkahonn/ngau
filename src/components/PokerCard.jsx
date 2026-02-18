@@ -9,7 +9,11 @@ function parseDisplay(value) {
   return { rank: upper[0], suit: upper.slice(1) };
 }
 
-export default function PokerCard({ value, compact = false }) {
+export default function PokerCard({ value, compact = false, size = null }) {
+  let sizeClass = "h-28 w-20";
+  if (compact || size === "compact") sizeClass = "h-24 w-16";
+  if (size === "tiny") sizeClass = "h-20 w-14";
+
   const { rank, suit } = parseDisplay(value);
   const suitSymbol = suitText[suit] ?? "";
   const isRed = suit === "H" || suit === "D";
@@ -18,7 +22,7 @@ export default function PokerCard({ value, compact = false }) {
     <div
       className={[
         "relative rounded-xl border bg-white shadow-card",
-        compact ? "h-24 w-16" : "h-28 w-20",
+        sizeClass,
         isRed ? "border-red-400" : "border-slate-300"
       ].join(" ")}
     >

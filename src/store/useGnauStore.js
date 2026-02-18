@@ -8,6 +8,20 @@ const PRESETS = [
   "10 J Q K A"
 ];
 
+function toInputToken(card) {
+  const rank = card.rank === "T" ? "10" : card.rank;
+  if (rank === "A" && card.suit) return `A${card.suit}`;
+  return rank;
+}
+
+function tokensFromInput(input) {
+  try {
+    return parseCards(input).map(toInputToken);
+  } catch {
+    return [];
+  }
+}
+
 function previewCards(input) {
   try {
     return parseCards(input);
@@ -21,12 +35,59 @@ export const useGnauStore = create((set, get) => ({
   error: "",
   result: null,
   preview: [],
+  pickedCards: [],
+  aceSuit: "S",
   presets: PRESETS,
   setInput: (value) => {
-    set({ input: value, preview: previewCards(value) });
+    set({ input: value, preview: previewCards(value), error: "", result: null });
   },
   applyPreset: (preset) => {
-    set({ input: preset, preview: previewCards(preset), error: "", result: null });
+    set({
+      input: preset,
+      preview: previewCards(preset),
+      pickedCards: tokensFromInput(preset),
+      error: "",
+      result: null
+    });
+  },
+  setAceSuit: (suit) => {
+    set({ aceSuit: suit });
+  },
+  addPickedCard: (rank) => {
+    const { pickedCards, aceSuit } = get();
+    if (pickedCards.length >= 5) return;
+
+    const nextCard = rank === "A" ? `A${aceSuit}` : rank;
+    const nextPicked = [...pickedCards, nextCard];
+    const nextInput = nextPicked.join(" ");
+    set({
+      pickedCards: nextPicked,
+      input: nextInput,
+      preview: previewCards(nextInput),
+      error: "",
+      result: null
+    });
+  },
+  removePickedCard: (index) => {
+    const { pickedCards } = get();
+    if (index < 0 || index >= pickedCards.length) return;
+
+    const nextPicked = pickedCards.filter((_, i) => i !== index);
+    const nextInput = nextPicked.join(" ");
+    set({
+      pickedCards: nextPicked,
+      input: nextInput,
+      preview: previewCards(nextInput),
+      error: "",
+      result: null
+    });
+  },
+  syncPickedFromInput: () => {
+    const { input } = get();
+    const tokens = tokensFromInput(input);
+    if (tokens.length === 5) {
+      set({ pickedCards: tokens });
+    }
   },
   analyze: () => {
     const { input } = get();
@@ -38,6 +99,12 @@ export const useGnauStore = create((set, get) => ({
     }
   },
   clear: () => {
-    set({ input: "", error: "", result: null, preview: [] });
+    set({
+      input: "",
+      error: "",
+      result: null,
+      preview: [],
+      pickedCards: []
+    });
   }
 }));
