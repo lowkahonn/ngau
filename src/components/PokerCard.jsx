@@ -17,23 +17,32 @@ export default function PokerCard({ value, compact = false, size = null }) {
   const { rank, suit } = parseDisplay(value);
   const suitSymbol = suitText[suit] ?? "";
   const isRed = suit === "H" || suit === "D";
+  const tone = isRed ? "text-red-600" : "text-slate-900";
+  const centerText = suitSymbol || rank;
 
   return (
     <div
       className={[
-        "relative rounded-xl border bg-white shadow-card",
+        "relative overflow-hidden rounded-xl border bg-white shadow-card",
         sizeClass,
-        isRed ? "border-red-400" : "border-slate-300"
+        isRed ? "border-red-300" : "border-slate-300"
       ].join(" ")}
     >
-      <div className={["absolute left-2 top-2 text-sm font-semibold", isRed ? "text-red-600" : "text-slate-900"].join(" ")}>
-        {rank}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.95),_rgba(241,245,249,0.92)_45%,_rgba(226,232,240,0.72)_100%)]" />
+
+      <div className={["absolute left-1.5 top-1 z-10 flex flex-col items-center leading-none", tone].join(" ")}>
+        <span className="text-[11px] font-bold">{rank}</span>
+        <span className="text-[11px]">{suitSymbol || "•"}</span>
       </div>
-      <div className={["absolute bottom-2 right-2 text-sm font-semibold", isRed ? "text-red-600" : "text-slate-900"].join(" ")}>
-        {rank}
+
+      <div className={["absolute bottom-1 right-1.5 z-10 flex rotate-180 flex-col items-center leading-none", tone].join(" ")}>
+        <span className="text-[11px] font-bold">{rank}</span>
+        <span className="text-[11px]">{suitSymbol || "•"}</span>
       </div>
-      <div className={["flex h-full items-center justify-center text-3xl", isRed ? "text-red-600" : "text-slate-900"].join(" ")}>
-        {suitSymbol || rank}
+
+      <div className={["relative z-10 flex h-full flex-col items-center justify-center gap-1", tone].join(" ")}>
+        <span className="text-2xl font-semibold tracking-wide">{centerText}</span>
+        {suitSymbol ? <span className="text-xl">{suitSymbol}</span> : <span className="text-xs font-medium tracking-wider">POKER</span>}
       </div>
     </div>
   );
