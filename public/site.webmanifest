@@ -1,0 +1,18 @@
+{
+  "name": "Gnau / NiuNiu Calculator",
+  "short_name": "Gnau",
+  "description": "Gnau / NiuNiu mobile calculator with 3/6 swap, Niu Dong Gu, pair scoring, and best arrangement.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0a2f25",
+  "theme_color": "#0a2f25",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

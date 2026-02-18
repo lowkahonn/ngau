@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "seo:generate": "node scripts/generate-seo-files.mjs",
+    "prebuild": "npm run seo:generate",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Gnau logo">
+  <defs>
+    <linearGradient id="felt" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f4d3d" />
+      <stop offset="100%" stop-color="#072b22" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="26" fill="url(#felt)" />
+  <rect x="22" y="18" width="84" height="92" rx="12" fill="#fff" />
+  <text x="32" y="48" font-size="24" font-family="Arial, sans-serif" fill="#b91c1c">A</text>
+  <path d="M82 42l8 12h-16z" fill="#111827" />
+  <text x="35" y="95" font-size="26" font-family="Arial, sans-serif" fill="#111827">牛</text>
+</svg>

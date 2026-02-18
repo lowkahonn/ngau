@@ -176,6 +176,43 @@ function PickerPanel({ pickedCards, aceSuit, setAceSuit, addPickedCard, removePi
   );
 }
 
+function SeoContent() {
+  return (
+    <section className="space-y-4 rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md">
+      <section id="rules" aria-labelledby="rules-title" className="space-y-2">
+        <h2 id="rules-title" className="font-title text-xl text-emerald-50">
+          Gnau / 牛牛規則重點
+        </h2>
+        <p className="text-sm leading-relaxed text-emerald-100/90">
+          這個 Gnau（牛牛）線上計算器會自動找出最佳排法，包含底牌 3 張、點牌 2 張、3/6
+          互換、孖寶按原始牌面、10 點、五張公，以及黑桃 A 搭配 J/Q/K 的牛冬菇。
+        </p>
+        <p className="text-sm leading-relaxed text-emerald-100/85">
+          適合想快速比較牌力、練習排牌，或查核馬來西亞牛牛常見玩法的玩家。
+        </p>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-title" className="space-y-2">
+        <h2 id="faq-title" className="font-title text-xl text-emerald-50">
+          FAQ
+        </h2>
+        <details className="rounded-xl border border-white/15 bg-black/20 p-3">
+          <summary className="cursor-pointer text-sm font-semibold text-emerald-50">可以輸入 10 還是一定要 T？</summary>
+          <p className="mt-2 text-sm text-emerald-100/85">兩者都可以，系統會統一顯示為 10。</p>
+        </details>
+        <details className="rounded-xl border border-white/15 bg-black/20 p-3">
+          <summary className="cursor-pointer text-sm font-semibold text-emerald-50">A 的花色會影響結果嗎？</summary>
+          <p className="mt-2 text-sm text-emerald-100/85">會。只有黑桃 A（AS）搭配 J/Q/K 才會觸發牛冬菇。</p>
+        </details>
+        <details className="rounded-xl border border-white/15 bg-black/20 p-3">
+          <summary className="cursor-pointer text-sm font-semibold text-emerald-50">3 與 6 的互換會影響孖寶嗎？</summary>
+          <p className="mt-2 text-sm text-emerald-100/85">孖寶判定看原始牌面，不會因 3/6 互換而改變。</p>
+        </details>
+      </section>
+    </section>
+  );
+}
+
 export default function App() {
   const {
     input,
@@ -246,6 +283,7 @@ export default function App() {
         </section>
 
         {result && <ResultPanel result={result} />}
+        <SeoContent />
       </section>
 
       <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">

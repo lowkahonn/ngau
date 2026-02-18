@@ -31,3 +31,11 @@ npm run preview
 
 `vite.config.js` auto-detects repository path in GitHub Actions and sets `base` accordingly.
 If you need a custom path, set `VITE_BASE_PATH`.
+
+## SEO setup
+
+- `index.html` includes canonical URL, Open Graph tags, Twitter card tags, and JSON-LD (`WebApplication` + `FAQPage`).
+- `npm run build` runs `npm run seo:generate` first to generate:
+  - `public/robots.txt`
+  - `public/sitemap.xml`
+- `deploy-pages.yml` injects `VITE_SITE_URL` from the GitHub repository URL so canonical and sitemap are correct on Pages.

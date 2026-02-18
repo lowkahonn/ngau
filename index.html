@@ -1,12 +1,98 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Gnau / NiuNiu Analyzer</title>
+    <title>Gnau 牛牛計算器 | NiuNiu Online Calculator (3/6互換、牛冬菇、孖寶)</title>
+    <meta
+      name="description"
+      content="線上 Gnau / 牛牛計算器：支援 3/6 互換、牛冬菇（黑桃A + JQK）、孖寶、10 點、五張公與最佳排牌建議。手機優化，立即免費試算。"
+    />
+    <meta
+      name="keywords"
+      content="gnau, niuniu, 牛牛, 牛牛計算器, niu niu calculator, 馬來西亞牛牛, 牛冬菇, 孖寶, 3 6 互換"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Gnau Web" />
+    <meta name="theme-color" content="#0a2f25" />
+    <meta name="application-name" content="Gnau 牛牛計算器" />
+
+    <link rel="canonical" href="%VITE_SITE_URL%" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gnau / NiuNiu Calculator" />
+    <meta property="og:title" content="Gnau 牛牛計算器 | NiuNiu Online Calculator" />
+    <meta
+      property="og:description"
+      content="輸入或點選 5 張牌，立即計算最佳牛牛排法。支援 3/6 互換、牛冬菇、孖寶、10 點與五張公。"
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta property="og:locale" content="zh_TW" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gnau 牛牛計算器 | NiuNiu Online Calculator" />
+    <meta
+      name="twitter:description"
+      content="快速試算 Gnau / 牛牛，支援 3/6 互換、牛冬菇、孖寶與最佳排牌。"
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Gnau / NiuNiu Calculator",
+        "url": "%VITE_SITE_URL%",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Web Browser",
+        "inLanguage": ["zh-Hant", "en"],
+        "description": "Mobile-first Gnau / NiuNiu calculator with 3/6 swap, Niu Dong Gu, pair scoring, and best arrangement analysis.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Gnau / 牛牛計算器支援哪些規則？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "支援 3/6 互換、底牌 10 倍數、孖寶按原始牌面、10點、五張公，以及黑桃A + J/Q/K 的牛冬菇。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "可以直接輸入 10 嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "可以，系統接受 10 與 T，並統一以 10 顯示。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "A 的花色會影響結果嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "會。只有黑桃A（AS）搭配 J/Q/K 才會觸發牛冬菇。"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>請啟用 JavaScript 使用 Gnau / 牛牛計算器。</noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
