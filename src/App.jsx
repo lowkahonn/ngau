@@ -11,18 +11,10 @@ const LANGUAGE_OPTIONS = [
   { value: "en", label: "EN" }
 ];
 
-const THEME_OPTIONS = [
-  { value: "dark", label: { "zh-Hant": "深色", "zh-Hans": "深色", en: "Dark" } },
-  { value: "light", label: { "zh-Hant": "淺色", "zh-Hans": "浅色", en: "Light" } }
-];
-
 const I18N = {
   "zh-Hant": {
-    appTag: "Mobile Gnau Calculator",
-    title: "Gnau / NiuNiu",
-    subtitle: "點選或輸入 5 張牌，計算最佳排法。支援 10、A 花色、3/6 互換。",
-    language: "語言",
-    theme: "主題",
+    title: "Gnau 計算器",
+    subtitle: "點選或輸入 5 張牌，支援 10、AS、3/6 互換。",
     inputLabel: "輸入牌組",
     inputPlaceholder: "例如：AS 3 6 8 K",
     pickerTitle: "點選選牌（最多 5 張）",
@@ -40,23 +32,13 @@ const I18N = {
     assumedTitle: "A 假設排法（A 當黑桃 A）",
     assumedMissing: "無法排出牛冬菇（需 A + J/Q/K 且底為 10 的倍數）。",
     handLine: (name, points, mult) => `牌型：${name} ｜ 點數：${points} ｜ 倍數：${mult}倍`,
-    rulesTitle: "Gnau / 牛牛規則重點",
+    rulesTitle: "Gnau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
-    rulesBody2: "適合快速試算與排牌練習，特別是馬來西亞常見牛牛玩法。",
-    faqTitle: "常見問題",
-    faq1q: "可以輸入 10 還是一定要 T？",
-    faq1a: "兩者都可以，系統會統一以 10 顯示。",
-    faq2q: "A 的花色會影響結果嗎？",
-    faq2a: "會。只有黑桃 A（AS）搭配 J/Q/K 才會觸發牛冬菇。",
-    faq3q: "3 與 6 互換會影響孖寶嗎？",
-    faq3a: "孖寶判定看原始牌面，不會因 3/6 互換而改變。"
+    rulesBody2: "適合快速試算與排牌練習。"
   },
   "zh-Hans": {
-    appTag: "Mobile Gnau Calculator",
-    title: "Gnau / NiuNiu",
-    subtitle: "点选或输入 5 张牌，计算最佳排法。支持 10、A 花色、3/6 互换。",
-    language: "语言",
-    theme: "主题",
+    title: "Gnau 计算器",
+    subtitle: "点选或输入 5 张牌，支持 10、AS、3/6 互换。",
     inputLabel: "输入牌组",
     inputPlaceholder: "例如：AS 3 6 8 K",
     pickerTitle: "点击选牌（最多 5 张）",
@@ -74,23 +56,13 @@ const I18N = {
     assumedTitle: "A 假设排法（A 当黑桃 A）",
     assumedMissing: "无法排出牛冬菇（需 A + J/Q/K 且底为 10 的倍数）。",
     handLine: (name, points, mult) => `牌型：${name} ｜ 点数：${points} ｜ 倍数：${mult}倍`,
-    rulesTitle: "Gnau / 牛牛规则重点",
+    rulesTitle: "Gnau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
-    rulesBody2: "适合快速试算与排牌练习，特别是马来西亚常见牛牛玩法。",
-    faqTitle: "常见问题",
-    faq1q: "可以输入 10 还是一定要 T？",
-    faq1a: "两者都可以，系统会统一以 10 显示。",
-    faq2q: "A 的花色会影响结果吗？",
-    faq2a: "会。只有黑桃 A（AS）搭配 J/Q/K 才会触发牛冬菇。",
-    faq3q: "3 与 6 互换会影响孖宝吗？",
-    faq3a: "孖宝判定看原始牌面，不会因 3/6 互换而改变。"
+    rulesBody2: "适合快速试算与排牌练习。"
   },
   en: {
-    appTag: "Mobile Gnau Calculator",
-    title: "Gnau / NiuNiu",
-    subtitle: "Pick or type 5 cards to compute the best arrangement. Supports 10, Ace suit, and 3/6 swap.",
-    language: "Language",
-    theme: "Theme",
+    title: "Gnau Calculator",
+    subtitle: "Pick or type 5 cards. Supports 10, AS, and 3/6 swap.",
     inputLabel: "Card Input",
     inputPlaceholder: "Example: AS 3 6 8 K",
     pickerTitle: "Tap to pick cards (max 5)",
@@ -108,16 +80,9 @@ const I18N = {
     assumedTitle: "Ace Assumed Combo (A as Spade Ace)",
     assumedMissing: "No Niu Dong Gu combo found (requires A + J/Q/K and valid base).",
     handLine: (name, points, mult) => `Type: ${name} | Points: ${points} | Multiplier: ${mult}x`,
-    rulesTitle: "Gnau / NiuNiu Rule Highlights",
+    rulesTitle: "Gnau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
-    rulesBody2: "Built for quick checking and practice of common Malaysian Gnau / NiuNiu variants.",
-    faqTitle: "FAQ",
-    faq1q: "Can I type 10 instead of T?",
-    faq1a: "Yes. Both 10 and T are accepted, and output is normalized to 10.",
-    faq2q: "Does Ace suit affect result?",
-    faq2a: "Yes. Only Spade Ace (AS) with J/Q/K triggers Niu Dong Gu.",
-    faq3q: "Does 3/6 swap change pair detection?",
-    faq3a: "No. Pair is judged by original face value, not swapped display value."
+    rulesBody2: "Built for quick checking and practice."
   }
 };
 
@@ -189,10 +154,7 @@ function ResultPanel({ result, t, language, isLight }) {
   const assumedBase = assumed ? formatCards(assumed.baseCards, { useFace: true, assumeSpadeAce: true }) : [];
   const assumedPoint = assumed ? formatCards(assumed.pointCards, { useFace: true, assumeSpadeAce: true }) : [];
 
-  const showAssumed =
-    hasAce &&
-    assumed &&
-    comboKey(best, true) !== comboKey(assumed, true);
+  const showAssumed = hasAce && assumed && comboKey(best, true) !== comboKey(assumed, true);
   const showAssumedSection = (hasAce && !assumed) || showAssumed;
 
   return (
@@ -209,16 +171,8 @@ function ResultPanel({ result, t, language, isLight }) {
           <p className={isLight ? "mt-3 text-sm text-slate-800" : "mt-3 text-sm text-emerald-50"}>{t.handLine(localizeHandName("五張公", language), best.points, best.multiplier)}</p>
         ) : (
           <div className="mt-3 space-y-3">
-            <ArrangementRows
-              pointCards={pointCards}
-              baseCards={baseCards}
-              pointLabel={t.pointRow}
-              baseLabel={t.baseRow}
-              isLight={isLight}
-            />
-            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>
-              {t.handLine(localizeHandName(best.name, language), best.points, best.multiplier)}
-            </p>
+            <ArrangementRows pointCards={pointCards} baseCards={baseCards} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handLine(localizeHandName(best.name, language), best.points, best.multiplier)}</p>
           </div>
         )}
       </article>
@@ -230,16 +184,8 @@ function ResultPanel({ result, t, language, isLight }) {
             <p className={isLight ? "mt-2 text-sm text-amber-800" : "mt-2 text-sm text-amber-50/85"}>{t.assumedMissing}</p>
           ) : (
             <div className="mt-3 space-y-3">
-              <ArrangementRows
-                pointCards={assumedPoint}
-                baseCards={assumedBase}
-                pointLabel={t.pointRow}
-                baseLabel={t.baseRow}
-                isLight={isLight}
-              />
-              <p className={isLight ? "text-sm text-amber-900" : "text-sm text-amber-50"}>
-                {t.handLine(localizeHandName("牛冬菇", language), 1, 7)}
-              </p>
+              <ArrangementRows pointCards={assumedPoint} baseCards={assumedBase} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
+              <p className={isLight ? "text-sm text-amber-900" : "text-sm text-amber-50"}>{t.handLine(localizeHandName("牛冬菇", language), 1, 7)}</p>
             </div>
           )}
         </article>
@@ -332,7 +278,7 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, disabled, t
   );
 }
 
-function SeoContent({ t, isLight }) {
+function RulesContent({ t, isLight }) {
   return (
     <section className={isLight ? "space-y-4 rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "space-y-4 rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
       <section id="rules" aria-labelledby="rules-title" className="space-y-2">
@@ -342,46 +288,34 @@ function SeoContent({ t, isLight }) {
         <p className={isLight ? "text-sm leading-relaxed text-slate-700" : "text-sm leading-relaxed text-emerald-100/90"}>{t.rulesBody1}</p>
         <p className={isLight ? "text-sm leading-relaxed text-slate-700" : "text-sm leading-relaxed text-emerald-100/85"}>{t.rulesBody2}</p>
       </section>
-
-      <section id="faq" aria-labelledby="faq-title" className="space-y-2">
-        <h2 id="faq-title" className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>
-          {t.faqTitle}
-        </h2>
-        <details className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 p-3" : "rounded-xl border border-white/15 bg-black/20 p-3"}>
-          <summary className={isLight ? "cursor-pointer text-sm font-semibold text-slate-900" : "cursor-pointer text-sm font-semibold text-emerald-50"}>{t.faq1q}</summary>
-          <p className={isLight ? "mt-2 text-sm text-slate-700" : "mt-2 text-sm text-emerald-100/85"}>{t.faq1a}</p>
-        </details>
-        <details className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 p-3" : "rounded-xl border border-white/15 bg-black/20 p-3"}>
-          <summary className={isLight ? "cursor-pointer text-sm font-semibold text-slate-900" : "cursor-pointer text-sm font-semibold text-emerald-50"}>{t.faq2q}</summary>
-          <p className={isLight ? "mt-2 text-sm text-slate-700" : "mt-2 text-sm text-emerald-100/85"}>{t.faq2a}</p>
-        </details>
-        <details className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 p-3" : "rounded-xl border border-white/15 bg-black/20 p-3"}>
-          <summary className={isLight ? "cursor-pointer text-sm font-semibold text-slate-900" : "cursor-pointer text-sm font-semibold text-emerald-50"}>{t.faq3q}</summary>
-          <p className={isLight ? "mt-2 text-sm text-slate-700" : "mt-2 text-sm text-emerald-100/85"}>{t.faq3a}</p>
-        </details>
-      </section>
     </section>
   );
 }
 
-function ControlPill({ active, children, onClick, isLight }) {
+function MinimalSwitches({ language, setLanguage, theme, setTheme, isLight }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "rounded-lg px-2.5 py-1.5 text-xs font-semibold",
-        active
-          ? isLight
-            ? "bg-emerald-600 text-white"
-            : "bg-emerald-300/25 text-emerald-50"
-          : isLight
-            ? "bg-slate-100 text-slate-700"
-            : "bg-black/30 text-emerald-100/80"
-      ].join(" ")}
-    >
-      {children}
-    </button>
+    <div className="flex items-center gap-2">
+      <select
+        value={language}
+        onChange={(event) => setLanguage(event.target.value)}
+        className={isLight ? "h-8 rounded-md border border-slate-300 bg-white px-2 text-xs text-slate-700" : "h-8 rounded-md border border-white/20 bg-black/30 px-2 text-xs text-emerald-100"}
+        aria-label="language"
+      >
+        {LANGUAGE_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        className={isLight ? "h-8 w-8 rounded-md border border-slate-300 bg-white text-sm text-slate-700" : "h-8 w-8 rounded-md border border-white/20 bg-black/30 text-sm text-emerald-100"}
+        aria-label="toggle-theme"
+      >
+        {theme === "light" ? "☀" : "☾"}
+      </button>
+    </div>
   );
 }
 
@@ -419,42 +353,11 @@ export default function App() {
     <main className={isLight ? "min-h-screen bg-felt-pattern-light px-4 pb-28 pt-6 text-slate-900" : "min-h-screen bg-felt-pattern px-4 pb-28 pt-6 text-white"}>
       <section className="mx-auto w-full max-w-md space-y-4">
         <header className={isLight ? "rounded-3xl border border-slate-300 bg-white p-5 shadow-xl" : "rounded-3xl border border-white/20 bg-black/30 p-5 shadow-panel backdrop-blur-md"}>
-          <p className={isLight ? "font-body text-xs uppercase tracking-[0.3em] text-slate-600" : "font-body text-xs uppercase tracking-[0.3em] text-emerald-200/80"}>{t.appTag}</p>
-          <h1 className={isLight ? "mt-2 font-title text-3xl leading-tight text-slate-900" : "mt-2 font-title text-3xl leading-tight"}>{t.title}</h1>
-          <p className={isLight ? "mt-2 text-sm text-slate-700" : "mt-2 text-sm text-emerald-100/85"}>{t.subtitle}</p>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div>
-              <p className={isLight ? "mb-1 text-xs text-slate-600" : "mb-1 text-xs text-emerald-100/70"}>{t.language}</p>
-              <div className="grid grid-cols-3 gap-1">
-                {LANGUAGE_OPTIONS.map((option) => (
-                  <ControlPill
-                    key={option.value}
-                    active={language === option.value}
-                    onClick={() => setLanguage(option.value)}
-                    isLight={isLight}
-                  >
-                    {option.label}
-                  </ControlPill>
-                ))}
-              </div>
-            </div>
-            <div>
-              <p className={isLight ? "mb-1 text-xs text-slate-600" : "mb-1 text-xs text-emerald-100/70"}>{t.theme}</p>
-              <div className="grid grid-cols-2 gap-1">
-                {THEME_OPTIONS.map((option) => (
-                  <ControlPill
-                    key={option.value}
-                    active={theme === option.value}
-                    onClick={() => setTheme(option.value)}
-                    isLight={isLight}
-                  >
-                    {option.label[language]}
-                  </ControlPill>
-                ))}
-              </div>
-            </div>
+          <div className="mb-3 flex justify-end">
+            <MinimalSwitches language={language} setLanguage={setLanguage} theme={theme} setTheme={setTheme} isLight={isLight} />
           </div>
+          <h1 className={isLight ? "font-title text-3xl leading-tight text-slate-900" : "font-title text-3xl leading-tight"}>{t.title}</h1>
+          <p className={isLight ? "mt-2 text-sm text-slate-700" : "mt-2 text-sm text-emerald-100/85"}>{t.subtitle}</p>
         </header>
 
         <section className={isLight ? "rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
@@ -467,33 +370,17 @@ export default function App() {
             className={isLight ? "w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:outline-none" : "w-full rounded-2xl border border-emerald-200/30 bg-emerald-950/40 px-4 py-3 text-base text-white placeholder:text-emerald-200/55 focus:border-emerald-300 focus:outline-none"}
           />
 
-          <PickerPanel
-            pickedCards={pickedCards}
-            addPickedCard={addPickedCard}
-            removePickedCard={removePickedCard}
-            disabled={pickedCards.length >= 5}
-            t={t}
-            isLight={isLight}
-          />
+          <PickerPanel pickedCards={pickedCards} addPickedCard={addPickedCard} removePickedCard={removePickedCard} disabled={pickedCards.length >= 5} t={t} isLight={isLight} />
 
           {previewCards.length > 0 && <CardRail title={t.preview} cards={previewCards} isLight={isLight} />}
 
-          {error && (
-            <p className={isLight ? "mt-3 rounded-xl border border-red-300 bg-red-50 p-2 text-sm text-red-700" : "mt-3 rounded-xl border border-red-300/40 bg-red-500/10 p-2 text-sm text-red-100"}>{error}</p>
-          )}
+          {error && <p className={isLight ? "mt-3 rounded-xl border border-red-300 bg-red-50 p-2 text-sm text-red-700" : "mt-3 rounded-xl border border-red-300/40 bg-red-500/10 p-2 text-sm text-red-100"}>{error}</p>}
         </section>
 
-        <SeoContent t={t} isLight={isLight} />
+        <RulesContent t={t} isLight={isLight} />
       </section>
 
-      <ResultDialog
-        open={isResultDialogOpen}
-        onClose={closeResultDialog}
-        result={result}
-        t={t}
-        language={language}
-        isLight={isLight}
-      />
+      <ResultDialog open={isResultDialogOpen} onClose={closeResultDialog} result={result} t={t} language={language} isLight={isLight} />
 
       <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
         <div className={isLight ? "grid grid-cols-2 gap-3 rounded-3xl border border-slate-300 bg-white p-3 shadow-2xl" : "grid grid-cols-2 gap-3 rounded-3xl border border-white/20 bg-black/55 p-3 backdrop-blur-md"}>

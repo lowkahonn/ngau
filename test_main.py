@@ -5,7 +5,7 @@ import sys
 from main import Card, best_assumed_niudonggu, best_overall, parse_cards, point_hand
 
 
-class NiuNiuRulesTest(unittest.TestCase):
+class GnauRulesTest(unittest.TestCase):
     def _solve(self, hand: str):
         cards = parse_cards(hand)
         result = best_overall(cards)

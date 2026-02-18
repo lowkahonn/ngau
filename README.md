@@ -1,13 +1,13 @@
-# Gnau / NiuNiu Web App
+# Gnau Web App
 
-Mobile-first web app for Gnau/NiuNiu calculation with poker-themed UI.
+Mobile-first web app for Gnau calculation with poker-themed UI.
 
 ## Stack
 
 - React + Vite
 - Tailwind CSS
 - zustand
-- Client-side Gnau/NiuNiu logic ported from `main.py`
+- Client-side Gnau logic ported from `main.py`
 
 ## Local development
 
@@ -34,7 +34,7 @@ If you need a custom path, set `VITE_BASE_PATH`.
 
 ## SEO setup
 
-- `index.html` includes canonical URL, Open Graph tags, Twitter card tags, and JSON-LD (`WebApplication` + `FAQPage`).
+- `index.html` includes canonical URL, Open Graph tags, Twitter card tags, and JSON-LD (`WebApplication`).
 - `npm run build` runs `npm run seo:generate` first to generate:
   - `public/robots.txt`
   - `public/sitemap.xml`

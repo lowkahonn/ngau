@@ -32,17 +32,17 @@ export default function PokerCard({ value, compact = false, size = null }) {
 
       <div className={["absolute left-1.5 top-1 z-10 flex flex-col items-center leading-none", tone].join(" ")}>
         <span className="text-[11px] font-bold">{rank}</span>
-        <span className="text-[11px]">{suitSymbol || "•"}</span>
+        {suitSymbol ? <span className="text-[11px]">{suitSymbol}</span> : null}
       </div>
 
       <div className={["absolute bottom-1 right-1.5 z-10 flex rotate-180 flex-col items-center leading-none", tone].join(" ")}>
         <span className="text-[11px] font-bold">{rank}</span>
-        <span className="text-[11px]">{suitSymbol || "•"}</span>
+        {suitSymbol ? <span className="text-[11px]">{suitSymbol}</span> : null}
       </div>
 
       <div className={["relative z-10 flex h-full flex-col items-center justify-center gap-1", tone].join(" ")}>
         <span className="text-2xl font-semibold tracking-wide">{centerText}</span>
-        {suitSymbol ? <span className="text-xl">{suitSymbol}</span> : <span className="text-xs font-medium tracking-wider">POKER</span>}
+        {suitSymbol ? <span className="text-xl">{suitSymbol}</span> : null}
       </div>
     </div>
   );
