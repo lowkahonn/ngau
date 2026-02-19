@@ -13,7 +13,7 @@ const LANGUAGE_OPTIONS = [
 
 const I18N = {
   "zh-Hant": {
-    title: "Gnau 計算器",
+    title: "Ngau 計算器",
     subtitle: "點選或輸入 5 張牌，支援 10、AS、3/6 互換。",
     inputLabel: "輸入牌組",
     inputPlaceholder: "例如：AS 3 6 8 K",
@@ -32,12 +32,12 @@ const I18N = {
     assumedTitle: "A 假設排法（A 當黑桃 A）",
     assumedMissing: "無法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
     handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
-    rulesTitle: "Gnau 規則重點",
+    rulesTitle: "Ngau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
     rulesBody2: "適合快速試算與排牌練習。"
   },
   "zh-Hans": {
-    title: "Gnau 计算器",
+    title: "Ngau 计算器",
     subtitle: "点选或输入 5 张牌，支持 10、AS、3/6 互换。",
     inputLabel: "输入牌组",
     inputPlaceholder: "例如：AS 3 6 8 K",
@@ -56,12 +56,12 @@ const I18N = {
     assumedTitle: "A 假设排法（A 当黑桃 A）",
     assumedMissing: "无法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
     handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
-    rulesTitle: "Gnau 规则重点",
+    rulesTitle: "Ngau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
     rulesBody2: "适合快速试算与排牌练习。"
   },
   en: {
-    title: "Gnau Calculator",
+    title: "Ngau Calculator",
     subtitle: "Pick or type 5 cards. Supports 10, AS, and 3/6 swap.",
     inputLabel: "Card Input",
     inputPlaceholder: "Example: AS 3 6 8 K",
@@ -80,7 +80,7 @@ const I18N = {
     assumedTitle: "Ace Assumed Combo (A as Spade Ace)",
     assumedMissing: "No Niu Dong Gu combo found (requires A + J/Q/K and base divisible by 10).",
     handLine: (name, points) => `Type: ${name} | Points: ${points}`,
-    rulesTitle: "Gnau Rule Highlights",
+    rulesTitle: "Ngau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
     rulesBody2: "Built for quick checking and practice."
   }

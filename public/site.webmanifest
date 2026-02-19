@@ -1,7 +1,7 @@
 {
-  "name": "Gnau Calculator",
-  "short_name": "Gnau",
-  "description": "Gnau mobile calculator with 3/6 swap, Niu Dong Gu, pair scoring, and best arrangement.",
+  "name": "Ngau Calculator",
+  "short_name": "Ngau",
+  "description": "Ngau mobile calculator (also known as gnau, ngao, 牛) with 3/6 swap, Niu Dong Gu, pair scoring, and best arrangement.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",

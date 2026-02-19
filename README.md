@@ -1,13 +1,13 @@
-# Gnau Web App
+# Ngau Web App
 
-Mobile-first web app for Gnau calculation with poker-themed UI.
+Mobile-first web app for Ngau calculation with poker-themed UI.
 
 ## Stack
 
 - React + Vite
 - Tailwind CSS
 - zustand
-- Client-side Gnau logic ported from `main.py`
+- Client-side Ngau logic ported from `main.py`
 
 ## Local development
 
