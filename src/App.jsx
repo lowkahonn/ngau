@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react";
+import AdSenseSlot from "./components/AdSenseSlot";
 import PokerCard from "./components/PokerCard";
 import { formatCards } from "./lib/gnau";
 import { useGnauStore } from "./store/useGnauStore";
@@ -375,6 +376,7 @@ export default function App() {
         </section>
 
         <RulesContent t={t} isLight={isLight} />
+        <AdSenseSlot isLight={isLight} />
       </section>
 
       <ResultDialog open={isResultDialogOpen} onClose={closeResultDialog} result={result} t={t} language={language} isLight={isLight} />
