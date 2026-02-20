@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>牛牛 FAQ | Ngau 计算器</title>
+    <meta
+      name="description"
+      content="牛牛常见问题：底牌是否合法、A 的处理方式、3/6 互换影响、孖宝与 10 点比较，以及计算器判定逻辑。"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-faq-zh-hans.html" />
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%ngau-faq.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="%VITE_SITE_URL%ngau-faq-zh-hant.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="%VITE_SITE_URL%ngau-faq-zh-hans.html" />
+    <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%ngau-faq.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="牛牛 FAQ" />
+    <meta
+      property="og:description"
+      content="整理最常见牛牛疑问，快速看懂规则和判定逻辑。"
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-faq-zh-hans.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="牛牛 FAQ" />
+    <meta
+      name="twitter:description"
+      content="快速解答牛牛常见规则问题，减少排牌误判。"
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "什么才算合法排法？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "5 张牌需拆成 3 张底牌和 2 张点牌，且底牌总和必须可被 10 整除。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "任何 A 都能直接算牛冬菇吗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "直接牛冬菇需要 AS 搭配 J、Q 或 K，且底牌仍需合法。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "3/6 互换会如何影响结果？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "计算器会检查所有 3/6 互换组合，并返回最强合法结果。"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">返回计算器</a>
+
+      <header class="hero">
+        <p class="eyebrow">常见问题</p>
+        <h1>牛牛 FAQ</h1>
+        <p class="lede">本页整理玩家最常见的规则疑问，帮助你快速确认排牌是否合法，以及为什么会这样判定。</p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau-zh-hans.html">牛牛玩法</a>
+          <a href="ngau-rules-explained-zh-hans.html">规则详解</a>
+          <a href="ngau-3-6-explained-zh-hans.html">3/6 互换</a>
+          <a href="ngau-example-rounds-zh-hans.html">实战例子</a>
+          <a class="active" href="ngau-faq-zh-hans.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>常见问题列表</h2>
+
+        <section class="faq-item">
+          <h3>1) 如果凑不出合法底牌怎么办？</h3>
+          <p>若所有 3 张底牌组合都无法被 10 整除，这手牌在本规则下就没有合法排法。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>2) 输入 A 时一定要写成 AS 吗？</h3>
+          <p>不一定。你可输入一般 A。若要直接触发牛冬菇，需明确是黑桃 A（AS）并搭配 J/Q/K。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>3) 孖宝和 10 点哪个更强？</h3>
+          <p>在本工具中先比倍数。孖宝倍数 3，高于 10 点倍数 2，因此多数情况孖宝更强。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>4) 为什么有时显示点数较低却被判更强？</h3>
+          <p>因为比较顺序是倍数、点数、kicker。点数不是唯一标准。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>5) 3/6 互换要自己全部手动试吗？</h3>
+          <p>不需要。计算器已内建全部互换组合评估，能直接返回最强合法结果。</p>
+        </section>
+
+        <a class="cta" href="%BASE_URL%">返回计算器</a>
+      </article>
+
+      <p class="footer-note">更新日期：2026-02-20</p>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>牛牛实战例子 | Ngau 计算器</title>
+    <meta
+      name="description"
+      content="牛牛实战例子逐步拆解：如何选底牌、比较点牌，并利用 3/6 互换找出更强合法排法。"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-example-rounds-zh-hans.html" />
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%ngau-example-rounds.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="%VITE_SITE_URL%ngau-example-rounds-zh-hant.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="%VITE_SITE_URL%ngau-example-rounds-zh-hans.html" />
+    <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%ngau-example-rounds.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="牛牛实战例子" />
+    <meta
+      property="og:description"
+      content="用实际手牌示范从原始牌面到最佳排法的完整过程。"
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-example-rounds-zh-hans.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="牛牛实战例子" />
+    <meta
+      name="twitter:description"
+      content="通过对局范例练习判断顺序，提升排牌速度与稳定度。"
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "牛牛实战例子",
+        "description": "以步骤方式示范牛牛排牌与牌型比较。",
+        "author": {
+          "@type": "Organization",
+          "name": "Ngau Calculator"
+        },
+        "mainEntityOfPage": "%VITE_SITE_URL%ngau-example-rounds-zh-hans.html",
+        "inLanguage": "zh-Hans"
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">返回计算器</a>
+
+      <header class="hero">
+        <p class="eyebrow">实战练习</p>
+        <h1>牛牛实战例子</h1>
+        <p class="lede">以下例子示范完整判断流程：先验证底牌，再比较点牌，最后选出最强合法结果。</p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau-zh-hans.html">牛牛玩法</a>
+          <a href="ngau-rules-explained-zh-hans.html">规则详解</a>
+          <a href="ngau-3-6-explained-zh-hans.html">3/6 互换</a>
+          <a class="active" href="ngau-example-rounds-zh-hans.html">实战例子</a>
+          <a href="ngau-faq-zh-hans.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>例子 1：直接走特殊牌型路线</h2>
+        <p><strong>手牌：</strong>AS 9 K 4 7</p>
+        <ol>
+          <li>底牌选 9 + 4 + 7 = 20，合法。</li>
+          <li>点牌变成 AS + K。</li>
+          <li>符合牛冬菇条件，属于高优先结果。</li>
+        </ol>
+
+        <h3>重点</h3>
+        <p>如果看到 AS 与 J/Q/K 同时出现，先确认其余 3 张能否凑出合法底牌，通常有机会形成高价值结果。</p>
+      </article>
+
+      <article class="panel">
+        <h2>例子 2：3/6 互换带来更强拆法</h2>
+        <p><strong>手牌：</strong>3 6 8 J K</p>
+        <ol>
+          <li>先测试原值状态的底牌。</li>
+          <li>再测试 3/6 互换后状态。</li>
+          <li>更强合法拆法可能只会在互换后出现。</li>
+        </ol>
+
+        <p class="tip">当手牌看起来“差一点”才合法时，优先测试 3/6 互换通常最有效。</p>
+      </article>
+
+      <article class="panel">
+        <h2>例子 3：孖宝与 10 点的取舍</h2>
+        <p><strong>手牌：</strong>Q Q 2 8 K</p>
+        <ol>
+          <li>底牌 2 + 8 + K(10) = 20，合法。</li>
+          <li>点牌 Q + Q 形成孖宝（倍数更高）。</li>
+          <li>就算另一种拆法可出 10 点，也可能因倍数优先而不如孖宝。</li>
+        </ol>
+
+        <h3>重点</h3>
+        <p>不要只看点数大小。倍数在比较中权重更高，常常决定最终胜负。</p>
+
+        <a class="cta" href="%BASE_URL%">回到计算器测试这些例子</a>
+      </article>
+
+      <p class="footer-note">更新日期：2026-02-20</p>
+    </main>
+  </body>
+</html>

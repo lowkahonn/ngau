@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>牛牛 FAQ | Ngau 計算器</title>
+    <meta
+      name="description"
+      content="牛牛常見問題：底牌是否合法、A 的處理方式、3/6 互換影響、孖寶與 10 點比較，以及計算器判定邏輯。"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-faq-zh-hant.html" />
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%ngau-faq.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="%VITE_SITE_URL%ngau-faq-zh-hant.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="%VITE_SITE_URL%ngau-faq-zh-hans.html" />
+    <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%ngau-faq.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="牛牛 FAQ" />
+    <meta
+      property="og:description"
+      content="整理最常見牛牛疑問，快速查清楚規則與判定邏輯。"
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-faq-zh-hant.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="牛牛 FAQ" />
+    <meta
+      name="twitter:description"
+      content="快速解答牛牛常見規則問題，避免排牌誤判。"
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "什麼才算合法排法？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "5 張牌需拆成 3 張底牌和 2 張點牌，且底牌總和必須可被 10 整除。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "任何 A 都能直接算牛冬菇嗎？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "直接牛冬菇需要 AS 搭配 J、Q 或 K，且底牌仍需合法。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "3/6 互換會如何影響結果？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "計算器會檢查所有 3/6 互換組合，並回傳最強合法結果。"
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">返回計算器</a>
+
+      <header class="hero">
+        <p class="eyebrow">常見問題</p>
+        <h1>牛牛 FAQ</h1>
+        <p class="lede">本頁整理玩家最常見的規則疑問，幫你快速確認排牌是否合法與結果為何這樣判定。</p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau-zh-hant.html">牛牛玩法</a>
+          <a href="ngau-rules-explained-zh-hant.html">規則詳解</a>
+          <a href="ngau-3-6-explained-zh-hant.html">3/6 互換</a>
+          <a href="ngau-example-rounds-zh-hant.html">實戰例子</a>
+          <a class="active" href="ngau-faq-zh-hant.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>常見問題列表</h2>
+
+        <section class="faq-item">
+          <h3>1) 如果湊不出合法底牌怎麼辦？</h3>
+          <p>若所有 3 張底牌組合都無法被 10 整除，這手牌在本規則下就沒有合法排法。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>2) 輸入 A 時一定要寫成 AS 嗎？</h3>
+          <p>不一定。你可輸入一般 A。若要直接觸發牛冬菇，需明確是黑桃 A（AS）並搭配 J/Q/K。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>3) 孖寶和 10 點哪個比較強？</h3>
+          <p>在本工具中先比倍數。孖寶倍數 3，高於 10 點倍數 2，因此多數情況孖寶較強。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>4) 為什麼有時顯示點數較低卻被判更強？</h3>
+          <p>因為比較順序是倍數、點數、kicker。點數不是唯一標準。</p>
+        </section>
+
+        <section class="faq-item">
+          <h3>5) 3/6 互換要自己全部手動試嗎？</h3>
+          <p>不需要。計算器已內建全部互換組合評估，能直接回傳最強合法結果。</p>
+        </section>
+
+        <a class="cta" href="%BASE_URL%">返回計算器</a>
+      </article>
+
+      <p class="footer-note">更新日期：2026-02-20</p>
+    </main>
+  </body>
+</html>

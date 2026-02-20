@@ -115,6 +115,30 @@ const I18N = {
   }
 };
 
+const GUIDE_PAGE_PATHS = {
+  en: {
+    howToPlay: "how-to-play-ngau.html",
+    rules: "ngau-rules-explained.html",
+    swap: "ngau-3-6-explained.html",
+    examples: "ngau-example-rounds.html",
+    faq: "ngau-faq.html"
+  },
+  "zh-Hant": {
+    howToPlay: "how-to-play-ngau-zh-hant.html",
+    rules: "ngau-rules-explained-zh-hant.html",
+    swap: "ngau-3-6-explained-zh-hant.html",
+    examples: "ngau-example-rounds-zh-hant.html",
+    faq: "ngau-faq-zh-hant.html"
+  },
+  "zh-Hans": {
+    howToPlay: "how-to-play-ngau-zh-hans.html",
+    rules: "ngau-rules-explained-zh-hans.html",
+    swap: "ngau-3-6-explained-zh-hans.html",
+    examples: "ngau-example-rounds-zh-hans.html",
+    faq: "ngau-faq-zh-hans.html"
+  }
+};
+
 function localizeHandName(name, language) {
   if (language === "en") {
     if (name === "五張公") return "Five Face";
@@ -336,13 +360,14 @@ function RulesContent({ t, isLight }) {
   );
 }
 
-function GuidePages({ t, isLight }) {
+function GuidePages({ t, language, isLight }) {
+  const pagePaths = GUIDE_PAGE_PATHS[language] ?? GUIDE_PAGE_PATHS.en;
   const pages = [
-    { href: "how-to-play-ngau.html", label: t.guideHowToPlay },
-    { href: "ngau-rules-explained.html", label: t.guideRules },
-    { href: "ngau-3-6-explained.html", label: t.guideSwap },
-    { href: "ngau-example-rounds.html", label: t.guideExamples },
-    { href: "ngau-faq.html", label: t.guideFaq }
+    { href: pagePaths.howToPlay, label: t.guideHowToPlay },
+    { href: pagePaths.rules, label: t.guideRules },
+    { href: pagePaths.swap, label: t.guideSwap },
+    { href: pagePaths.examples, label: t.guideExamples },
+    { href: pagePaths.faq, label: t.guideFaq }
   ];
 
   return (
@@ -443,7 +468,7 @@ export default function App() {
         </section>
 
         <RulesContent t={t} isLight={isLight} />
-        <GuidePages t={t} isLight={isLight} />
+        <GuidePages t={t} language={language} isLight={isLight} />
         <AdSenseSlot isLight={isLight} />
       </section>
 

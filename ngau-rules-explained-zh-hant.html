@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>牛牛規則詳解 | Ngau 計算器</title>
+    <meta
+      name="description"
+      content="完整說明牛牛規則：底牌合法條件、點牌計算、特殊牌型與同分比較邏輯，內容與計算器判定一致。"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-rules-explained-zh-hant.html" />
+    <link rel="alternate" hreflang="en" href="%VITE_SITE_URL%ngau-rules-explained.html" />
+    <link rel="alternate" hreflang="zh-Hant" href="%VITE_SITE_URL%ngau-rules-explained-zh-hant.html" />
+    <link rel="alternate" hreflang="zh-Hans" href="%VITE_SITE_URL%ngau-rules-explained-zh-hans.html" />
+    <link rel="alternate" hreflang="x-default" href="%VITE_SITE_URL%ngau-rules-explained.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="牛牛規則詳解" />
+    <meta
+      property="og:description"
+      content="了解牛牛排牌合法性、特殊牌型優先級與最終比較方式。"
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-rules-explained-zh-hant.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="牛牛規則詳解" />
+    <meta
+      name="twitter:description"
+      content="從底牌是否成立到牌型優先級，一次掌握牛牛規則核心。"
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "牛牛規則詳解",
+        "description": "牛牛規則拆解：合法排法、牌型排名與計算邏輯。",
+        "author": {
+          "@type": "Organization",
+          "name": "Ngau Calculator"
+        },
+        "mainEntityOfPage": "%VITE_SITE_URL%ngau-rules-explained-zh-hant.html",
+        "inLanguage": "zh-Hant"
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">返回計算器</a>
+
+      <header class="hero">
+        <p class="eyebrow">規則參考</p>
+        <h1>牛牛規則詳解</h1>
+        <p class="lede">本頁整理計算器採用的完整判定流程，方便你對照每一步，理解為何同一手牌會得到特定結果。</p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau-zh-hant.html">牛牛玩法</a>
+          <a class="active" href="ngau-rules-explained-zh-hant.html">規則詳解</a>
+          <a href="ngau-3-6-explained-zh-hant.html">3/6 互換</a>
+          <a href="ngau-example-rounds-zh-hant.html">實戰例子</a>
+          <a href="ngau-faq-zh-hant.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>1) 合法排法條件</h2>
+        <p>5 張牌要拆成 3 張底牌與 2 張點牌。只有當底牌總和可被 10 整除時，該拆法才有效。若所有拆法都不合法，就沒有可用結果。</p>
+
+        <h3>牌值計算</h3>
+        <ul>
+          <li>A = 1</li>
+          <li>2-9 = 牌面值</li>
+          <li>10 / J / Q / K = 10</li>
+        </ul>
+      </article>
+
+      <article class="panel">
+        <h2>2) 點牌與特殊牌型</h2>
+        <p>底牌合法後，2 張點牌依照下列邏輯比較：</p>
+        <ul>
+          <li><strong>牛冬菇</strong>：AS + J/Q/K，倍數 7，點數 1</li>
+          <li><strong>孖寶</strong>：點牌牌面相同，倍數 3</li>
+          <li><strong>10點</strong>：點牌總和 % 10 = 0，倍數 2</li>
+          <li><strong>1 至 9 點</strong>：一般點數，倍數 1</li>
+          <li><strong>五張公</strong>：5 張皆為 J/Q/K，倍數 5</li>
+        </ul>
+
+        <p class="tip">牛冬菇的直接條件是黑桃 A（AS）搭配 J/Q/K，且底牌仍需成立。</p>
+      </article>
+
+      <article class="panel">
+        <h2>3) 排名與同分比較</h2>
+        <p>計算器先比倍數，再比點數，最後比 kicker。所以看起來點數較低的結果，仍可能因倍數較高而勝出。</p>
+
+        <h3>為什麼結果看起來會反直覺</h3>
+        <ul>
+          <li>特殊牌型倍數高，會壓過一般高點數。</li>
+          <li>3/6 互換後可能出現更強合法拆法。</li>
+          <li>孖寶比較使用原始牌面。</li>
+        </ul>
+
+        <a class="cta" href="%BASE_URL%">回到計算器驗證規則</a>
+      </article>
+
+      <p class="footer-note">更新日期：2026-02-20</p>
+    </main>
+  </body>
+</html>
