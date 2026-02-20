@@ -18,7 +18,7 @@ export default function PokerCard({ value, compact = false, size = null }) {
   const suitSymbol = suitText[suit] ?? "";
   const isRed = suit === "H" || suit === "D";
   const tone = isRed ? "text-red-600" : "text-slate-900";
-  const centerText = suitSymbol || rank;
+  const centerText = rank;
 
   return (
     <div

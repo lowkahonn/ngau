@@ -1,10 +1,16 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import AdSenseSlot from "./components/AdSenseSlot";
 import PokerCard from "./components/PokerCard";
 import { formatCards } from "./lib/gnau";
 import { useGnauStore } from "./store/useGnauStore";
 
-const RANK_OPTIONS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const RANK_OPTIONS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+const ACE_SUIT_OPTIONS = [
+  { token: "AS", label: "A♠" },
+  { token: "AH", label: "A♥" },
+  { token: "AC", label: "A♣" },
+  { token: "AD", label: "A♦" }
+];
 
 const LANGUAGE_OPTIONS = [
   { value: "zh-Hant", label: "繁中" },
@@ -15,15 +21,17 @@ const LANGUAGE_OPTIONS = [
 const I18N = {
   "zh-Hant": {
     title: "Ngau 計算器",
-    subtitle: "點選或輸入 5 張牌，支援 10、AS、3/6 互換。",
-    inputLabel: "輸入牌組",
-    inputPlaceholder: "例如：AS 3 6 8 K",
+    subtitle: "點選 5 張牌即可計算，支援 10、AS、3/6 互換。",
     pickerTitle: "點選選牌（最多 5 張）",
-    pickerHint: "點牌面加入，點已選卡可移除",
-    preview: "預覽",
+    pickerHint: "點牌面加入，點已選卡可移除。下方可直接選 A 花色。",
+    pickerCount: (count) => `已選 ${count}/5`,
+    pickerRanks: "牌面快速鍵",
+    pickerAces: "A 花色快速鍵",
     clear: "清除",
+    undo: "還原上一張",
     analyze: "計算",
     close: "關閉",
+    resetResult: "重新選牌",
     resultTitle: "計算結果",
     bestResult: "最佳結果",
     noResultTitle: "找不到合法排法",
@@ -46,15 +54,17 @@ const I18N = {
   },
   "zh-Hans": {
     title: "Ngau 计算器",
-    subtitle: "点选或输入 5 张牌，支持 10、AS、3/6 互换。",
-    inputLabel: "输入牌组",
-    inputPlaceholder: "例如：AS 3 6 8 K",
+    subtitle: "点选 5 张牌即可计算，支持 10、AS、3/6 互换。",
     pickerTitle: "点击选牌（最多 5 张）",
-    pickerHint: "点牌面加入，点已选卡可移除",
-    preview: "预览",
+    pickerHint: "点牌面加入，点已选卡可移除。下方可直接选 A 花色。",
+    pickerCount: (count) => `已选 ${count}/5`,
+    pickerRanks: "牌面快捷键",
+    pickerAces: "A 花色快捷键",
     clear: "清除",
+    undo: "撤销上一张",
     analyze: "计算",
     close: "关闭",
+    resetResult: "重新选牌",
     resultTitle: "计算结果",
     bestResult: "最佳结果",
     noResultTitle: "找不到合法排法",
@@ -77,15 +87,17 @@ const I18N = {
   },
   en: {
     title: "Ngau Calculator",
-    subtitle: "Pick or type 5 cards. Supports 10, AS, and 3/6 swap.",
-    inputLabel: "Card Input",
-    inputPlaceholder: "Example: AS 3 6 8 K",
+    subtitle: "Pick 5 cards to analyze. Supports 10, AS, and 3/6 swap.",
     pickerTitle: "Tap to pick cards (max 5)",
-    pickerHint: "Tap a rank to add, tap a picked card to remove",
-    preview: "Preview",
+    pickerHint: "Tap a rank to add, tap a picked card to remove. Use Ace suit shortcuts below.",
+    pickerCount: (count) => `Picked ${count}/5`,
+    pickerRanks: "Quick Rank Picks",
+    pickerAces: "Ace Suit Shortcuts",
     clear: "Clear",
+    undo: "Undo Last",
     analyze: "Analyze",
     close: "Close",
+    resetResult: "New Hand",
     resultTitle: "Result",
     bestResult: "Best Result",
     noResultTitle: "No valid arrangement",
@@ -118,20 +130,6 @@ function localizeHandName(name, language) {
     if (matched) return `${matched[1]} Points`;
   }
   return name;
-}
-
-function CardRail({ title, cards, isLight }) {
-  if (!cards || cards.length === 0) return null;
-  return (
-    <section className="space-y-2">
-      <p className={isLight ? "text-xs tracking-[0.18em] text-emerald-900/75" : "text-xs tracking-[0.18em] text-emerald-100/80"}>{title}</p>
-      <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
-        {cards.map((card, index) => (
-          <PokerCard key={`${card}-${index}`} value={card} size="compact" />
-        ))}
-      </div>
-    </section>
-  );
 }
 
 function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight }) {
@@ -213,7 +211,7 @@ function ResultPanel({ result, t, language, isLight }) {
   );
 }
 
-function ResultDialog({ open, onClose, result, t, language, isLight }) {
+function ResultDialog({ open, onClose, onReset, result, t, language, isLight }) {
   if (!open) return null;
 
   return (
@@ -226,13 +224,22 @@ function ResultDialog({ open, onClose, result, t, language, isLight }) {
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>{t.resultTitle}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className={isLight ? "rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700" : "rounded-xl border border-white/20 bg-black/20 px-3 py-1.5 text-sm text-emerald-100"}
-          >
-            {t.close}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onReset}
+              className={isLight ? "rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-900" : "rounded-xl border border-amber-200/30 bg-amber-100/10 px-3 py-1.5 text-sm font-medium text-amber-50"}
+            >
+              {t.resetResult}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className={isLight ? "rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700" : "rounded-xl border border-white/20 bg-black/20 px-3 py-1.5 text-sm text-emerald-100"}
+            >
+              {t.close}
+            </button>
+          </div>
         </div>
 
         <div className="max-h-[75vh] overflow-y-auto pr-1">
@@ -243,11 +250,17 @@ function ResultDialog({ open, onClose, result, t, language, isLight }) {
   );
 }
 
-function PickerPanel({ pickedCards, addPickedCard, removePickedCard, disabled, t, isLight }) {
+function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastPickedCard, clear, t, isLight }) {
+  const disabled = pickedCards.length >= 5;
+  const hasCards = pickedCards.length > 0;
+
   return (
     <section className={isLight ? "mt-3 space-y-3 rounded-2xl border border-slate-300 bg-slate-100 p-3" : "mt-3 space-y-3 rounded-2xl border border-white/15 bg-black/20 p-3"}>
       <div>
-        <p className={isLight ? "text-xs tracking-[0.18em] text-slate-700" : "text-xs tracking-[0.18em] text-emerald-100/80"}>{t.pickerTitle}</p>
+        <div className="flex items-center justify-between">
+          <p className={isLight ? "text-xs tracking-[0.18em] text-slate-700" : "text-xs tracking-[0.18em] text-emerald-100/80"}>{t.pickerTitle}</p>
+          <p className={isLight ? "text-xs font-semibold text-emerald-700" : "text-xs font-semibold text-emerald-200"}>{t.pickerCount(pickedCards.length)}</p>
+        </div>
         <p className={isLight ? "mt-1 text-xs text-slate-600" : "mt-1 text-xs text-emerald-100/65"}>{t.pickerHint}</p>
         <div className="mt-2 grid grid-cols-5 gap-2">
           {Array.from({ length: 5 }, (_, index) => {
@@ -277,8 +290,27 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, disabled, t
         </div>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={removeLastPickedCard}
+          disabled={!hasCards}
+          className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/30 text-xs font-semibold text-emerald-100 disabled:opacity-40"}
+        >
+          {t.undo}
+        </button>
+        <button
+          type="button"
+          onClick={clear}
+          disabled={!hasCards}
+          className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/30 text-xs font-semibold text-emerald-100 disabled:opacity-40"}
+        >
+          {t.clear}
+        </button>
+      </div>
+
       <div>
-        <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.inputLabel}</p>
+        <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerRanks}</p>
         <div className="mt-2 grid grid-cols-7 gap-2">
           {RANK_OPTIONS.map((rank) => (
             <button
@@ -286,9 +318,28 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, disabled, t
               type="button"
               onClick={() => addPickedCard(rank)}
               disabled={disabled}
+              aria-label={`add-${rank}`}
               className={isLight ? "h-9 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-9 rounded-xl border border-white/20 bg-black/35 text-xs font-semibold text-emerald-50 disabled:opacity-40"}
             >
               {rank}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerAces}</p>
+        <div className="mt-2 grid grid-cols-4 gap-2">
+          {ACE_SUIT_OPTIONS.map((option) => (
+            <button
+              key={option.token}
+              type="button"
+              onClick={() => addPickedCard(option.token)}
+              disabled={disabled}
+              aria-label={`add-${option.token}`}
+              className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/35 text-xs font-semibold text-emerald-50 disabled:opacity-40"}
+            >
+              {option.label}
             </button>
           ))}
         </div>
@@ -368,8 +419,6 @@ function MinimalSwitches({ language, setLanguage, theme, setTheme, isLight }) {
 
 export default function App() {
   const {
-    input,
-    preview,
     error,
     result,
     pickedCards,
@@ -377,10 +426,9 @@ export default function App() {
     theme,
     setLanguage,
     setTheme,
-    setInput,
     addPickedCard,
     removePickedCard,
-    syncPickedFromInput,
+    removeLastPickedCard,
     analyze,
     clear,
     isResultDialogOpen,
@@ -393,8 +441,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute("lang", language);
   }, [language]);
-
-  const previewCards = useMemo(() => preview.map((card) => formatCards([card])[0]), [preview]);
+  const canAnalyze = pickedCards.length === 5;
 
   return (
     <main className={isLight ? "min-h-screen bg-felt-pattern-light px-4 pb-28 pt-6 text-slate-900" : "min-h-screen bg-felt-pattern px-4 pb-28 pt-6 text-white"}>
@@ -408,18 +455,15 @@ export default function App() {
         </header>
 
         <section className={isLight ? "rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
-          <label className={isLight ? "mb-2 block text-xs tracking-[0.18em] text-slate-600" : "mb-2 block text-xs tracking-[0.18em] text-emerald-100/80"}>{t.inputLabel}</label>
-          <input
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            onBlur={syncPickedFromInput}
-            placeholder={t.inputPlaceholder}
-            className={isLight ? "w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:outline-none" : "w-full rounded-2xl border border-emerald-200/30 bg-emerald-950/40 px-4 py-3 text-base text-white placeholder:text-emerald-200/55 focus:border-emerald-300 focus:outline-none"}
+          <PickerPanel
+            pickedCards={pickedCards}
+            addPickedCard={addPickedCard}
+            removePickedCard={removePickedCard}
+            removeLastPickedCard={removeLastPickedCard}
+            clear={clear}
+            t={t}
+            isLight={isLight}
           />
-
-          <PickerPanel pickedCards={pickedCards} addPickedCard={addPickedCard} removePickedCard={removePickedCard} disabled={pickedCards.length >= 5} t={t} isLight={isLight} />
-
-          {previewCards.length > 0 && <CardRail title={t.preview} cards={previewCards} isLight={isLight} />}
 
           {error && <p className={isLight ? "mt-3 rounded-xl border border-red-300 bg-red-50 p-2 text-sm text-red-700" : "mt-3 rounded-xl border border-red-300/40 bg-red-500/10 p-2 text-sm text-red-100"}>{error}</p>}
         </section>
@@ -429,7 +473,7 @@ export default function App() {
         <AdSenseSlot isLight={isLight} />
       </section>
 
-      <ResultDialog open={isResultDialogOpen} onClose={closeResultDialog} result={result} t={t} language={language} isLight={isLight} />
+      <ResultDialog open={isResultDialogOpen} onClose={closeResultDialog} onReset={clear} result={result} t={t} language={language} isLight={isLight} />
 
       <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
         <div className={isLight ? "grid grid-cols-2 gap-3 rounded-3xl border border-slate-300 bg-white p-3 shadow-2xl" : "grid grid-cols-2 gap-3 rounded-3xl border border-white/20 bg-black/55 p-3 backdrop-blur-md"}>
@@ -443,7 +487,8 @@ export default function App() {
           <button
             type="button"
             onClick={analyze}
-            className="h-12 rounded-2xl bg-chip-red font-semibold text-white shadow-lg shadow-red-950/40 active:scale-[0.98]"
+            disabled={!canAnalyze}
+            className="h-12 rounded-2xl bg-chip-red font-semibold text-white shadow-lg shadow-red-950/40 active:scale-[0.98] disabled:opacity-40"
           >
             {t.analyze}
           </button>

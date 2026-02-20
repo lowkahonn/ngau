@@ -1,34 +1,10 @@
 import { create } from "zustand";
-import { analyzeHand, parseCards } from "../lib/gnau";
-
-function toInputToken(card) {
-  const rank = card.rank === "T" ? "10" : card.rank;
-  if (rank === "A" && card.suit) return `A${card.suit}`;
-  return rank;
-}
-
-function tokensFromInput(input) {
-  try {
-    return parseCards(input).map(toInputToken);
-  } catch {
-    return [];
-  }
-}
-
-function previewCards(input) {
-  try {
-    return parseCards(input);
-  } catch {
-    return [];
-  }
-}
+import { analyzeHand } from "../lib/gnau";
 
 export const useGnauStore = create((set, get) => ({
-  input: "",
   error: "",
   result: null,
   isResultDialogOpen: false,
-  preview: [],
   pickedCards: [],
   language: "zh-Hant",
   theme: "dark",
@@ -38,29 +14,12 @@ export const useGnauStore = create((set, get) => ({
   setTheme: (theme) => {
     set({ theme });
   },
-  setInput: (value) => {
-    const preview = previewCards(value);
-    const cards = tokensFromInput(value);
-    set({
-      input: value,
-      preview,
-      pickedCards: cards.length <= 5 ? cards : [],
-      error: "",
-      result: null,
-      isResultDialogOpen: false
-    });
-  },
-  addPickedCard: (rank) => {
+  addPickedCard: (cardToken) => {
     const { pickedCards } = get();
     if (pickedCards.length >= 5) return;
-
-    const nextCard = rank;
-    const nextPicked = [...pickedCards, nextCard];
-    const nextInput = nextPicked.join(" ");
+    const nextPicked = [...pickedCards, cardToken];
     set({
       pickedCards: nextPicked,
-      input: nextInput,
-      preview: previewCards(nextInput),
       error: "",
       result: null,
       isResultDialogOpen: false
@@ -71,25 +30,30 @@ export const useGnauStore = create((set, get) => ({
     if (index < 0 || index >= pickedCards.length) return;
 
     const nextPicked = pickedCards.filter((_, i) => i !== index);
-    const nextInput = nextPicked.join(" ");
     set({
       pickedCards: nextPicked,
-      input: nextInput,
-      preview: previewCards(nextInput),
       error: "",
       result: null,
       isResultDialogOpen: false
     });
   },
-  syncPickedFromInput: () => {
-    const { input } = get();
-    const tokens = tokensFromInput(input);
-    if (tokens.length <= 5) {
-      set({ pickedCards: tokens });
-    }
+  removeLastPickedCard: () => {
+    const { pickedCards } = get();
+    if (pickedCards.length === 0) return;
+    const nextPicked = pickedCards.slice(0, -1);
+    set({
+      pickedCards: nextPicked,
+      error: "",
+      result: null,
+      isResultDialogOpen: false
+    });
   },
   analyze: () => {
-    const { input } = get();
+    const { pickedCards } = get();
+    if (pickedCards.length !== 5) {
+      return;
+    }
+    const input = pickedCards.join(" ");
     try {
       const result = analyzeHand(input);
       set({ result, error: "", isResultDialogOpen: true });
@@ -102,10 +66,8 @@ export const useGnauStore = create((set, get) => ({
   },
   clear: () => {
     set({
-      input: "",
       error: "",
       result: null,
-      preview: [],
       pickedCards: [],
       isResultDialogOpen: false
     });
