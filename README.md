@@ -23,6 +23,12 @@ npm run build
 npm run preview
 ```
 
+## AdSense (Phase 1)
+
+- AdSense loader script is included in `index.html` with client `ca-pub-7820179081725825`.
+- A single manual ad slot is rendered below the rules section.
+- Set `VITE_ADSENSE_SLOT_PHASE1` in `.env` with your real ad unit slot ID (10+ digits). The placeholder value in `.env.example` is intentionally ignored.
+
 ## GitHub Pages
 
 1. In GitHub repo settings, set **Pages > Build and deployment > Source** to `GitHub Actions`.
