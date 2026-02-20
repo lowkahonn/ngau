@@ -37,17 +37,6 @@ export const useGnauStore = create((set, get) => ({
       isResultDialogOpen: false
     });
   },
-  removeLastPickedCard: () => {
-    const { pickedCards } = get();
-    if (pickedCards.length === 0) return;
-    const nextPicked = pickedCards.slice(0, -1);
-    set({
-      pickedCards: nextPicked,
-      error: "",
-      result: null,
-      isResultDialogOpen: false
-    });
-  },
   analyze: () => {
     const { pickedCards } = get();
     if (pickedCards.length !== 5) {

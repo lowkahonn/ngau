@@ -4,7 +4,7 @@ import PokerCard from "./components/PokerCard";
 import { formatCards } from "./lib/gnau";
 import { useGnauStore } from "./store/useGnauStore";
 
-const RANK_OPTIONS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+const RANK_OPTIONS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const ACE_SUIT_OPTIONS = [
   { token: "AS", label: "A♠" },
   { token: "AH", label: "A♥" },
@@ -28,7 +28,6 @@ const I18N = {
     pickerRanks: "牌面快速鍵",
     pickerAces: "A 花色快速鍵",
     clear: "清除",
-    undo: "還原上一張",
     analyze: "計算",
     close: "關閉",
     resetResult: "重新選牌",
@@ -61,7 +60,6 @@ const I18N = {
     pickerRanks: "牌面快捷键",
     pickerAces: "A 花色快捷键",
     clear: "清除",
-    undo: "撤销上一张",
     analyze: "计算",
     close: "关闭",
     resetResult: "重新选牌",
@@ -94,7 +92,6 @@ const I18N = {
     pickerRanks: "Quick Rank Picks",
     pickerAces: "Ace Suit Shortcuts",
     clear: "Clear",
-    undo: "Undo Last",
     analyze: "Analyze",
     close: "Close",
     resetResult: "New Hand",
@@ -250,7 +247,7 @@ function ResultDialog({ open, onClose, onReset, result, t, language, isLight }) 
   );
 }
 
-function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastPickedCard, clear, t, isLight }) {
+function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, analyze, canAnalyze, t, isLight }) {
   const disabled = pickedCards.length >= 5;
   const hasCards = pickedCards.length > 0;
 
@@ -262,14 +259,14 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
           <p className={isLight ? "text-xs font-semibold text-emerald-700" : "text-xs font-semibold text-emerald-200"}>{t.pickerCount(pickedCards.length)}</p>
         </div>
         <p className={isLight ? "mt-1 text-xs text-slate-600" : "mt-1 text-xs text-emerald-100/65"}>{t.pickerHint}</p>
-        <div className="mt-2 grid grid-cols-5 gap-2">
+        <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">
           {Array.from({ length: 5 }, (_, index) => {
             const value = pickedCards[index];
             if (!value) {
               return (
                 <div
                   key={`empty-${index}`}
-                  className={isLight ? "flex h-20 w-14 items-center justify-center rounded-lg border border-dashed border-slate-400 bg-white text-xs text-slate-500" : "flex h-20 w-14 items-center justify-center rounded-lg border border-dashed border-emerald-100/25 bg-black/25 text-xs text-emerald-100/50"}
+                  className={isLight ? "flex h-[5.25rem] w-[3.75rem] shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-400 bg-white text-xs text-slate-500" : "flex h-[5.25rem] w-[3.75rem] shrink-0 items-center justify-center rounded-lg border border-dashed border-emerald-100/25 bg-black/25 text-xs text-emerald-100/50"}
                 >
                   +
                 </div>
@@ -280,7 +277,7 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
                 key={`${value}-${index}`}
                 type="button"
                 onClick={() => removePickedCard(index)}
-                className="rounded-lg active:scale-[0.98]"
+                className="shrink-0 rounded-lg active:scale-[0.98]"
                 aria-label={`remove-card-${index}`}
               >
                 <PokerCard value={value} size="tiny" />
@@ -290,28 +287,9 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          onClick={removeLastPickedCard}
-          disabled={!hasCards}
-          className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/30 text-xs font-semibold text-emerald-100 disabled:opacity-40"}
-        >
-          {t.undo}
-        </button>
-        <button
-          type="button"
-          onClick={clear}
-          disabled={!hasCards}
-          className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/30 text-xs font-semibold text-emerald-100 disabled:opacity-40"}
-        >
-          {t.clear}
-        </button>
-      </div>
-
       <div>
         <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerRanks}</p>
-        <div className="mt-2 grid grid-cols-7 gap-2">
+        <div className="mt-2 grid grid-cols-4 gap-2">
           {RANK_OPTIONS.map((rank) => (
             <button
               key={rank}
@@ -319,7 +297,7 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
               onClick={() => addPickedCard(rank)}
               disabled={disabled}
               aria-label={`add-${rank}`}
-              className={isLight ? "h-9 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-9 rounded-xl border border-white/20 bg-black/35 text-xs font-semibold text-emerald-50 disabled:opacity-40"}
+              className={isLight ? "h-12 touch-manipulation rounded-2xl border border-slate-300 bg-white px-2 text-sm font-semibold text-slate-700 disabled:opacity-40" : "h-12 touch-manipulation rounded-2xl border border-white/20 bg-black/35 px-2 text-sm font-semibold text-emerald-50 disabled:opacity-40"}
             >
               {rank}
             </button>
@@ -329,7 +307,7 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
 
       <div>
         <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerAces}</p>
-        <div className="mt-2 grid grid-cols-4 gap-2">
+        <div className="mt-2 grid grid-cols-2 gap-2">
           {ACE_SUIT_OPTIONS.map((option) => (
             <button
               key={option.token}
@@ -337,12 +315,31 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, removeLastP
               onClick={() => addPickedCard(option.token)}
               disabled={disabled}
               aria-label={`add-${option.token}`}
-              className={isLight ? "h-10 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 disabled:opacity-40" : "h-10 rounded-xl border border-white/20 bg-black/35 text-xs font-semibold text-emerald-50 disabled:opacity-40"}
+              className={isLight ? "h-12 touch-manipulation rounded-2xl border border-slate-300 bg-white px-2 text-sm font-semibold text-slate-700 disabled:opacity-40" : "h-12 touch-manipulation rounded-2xl border border-white/20 bg-black/35 px-2 text-sm font-semibold text-emerald-50 disabled:opacity-40"}
             >
               {option.label}
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 pt-1">
+        <button
+          type="button"
+          onClick={clear}
+          disabled={!hasCards}
+          className={isLight ? "h-12 rounded-2xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 active:scale-[0.98] disabled:opacity-40" : "h-12 rounded-2xl border border-white/20 bg-black/35 text-sm font-semibold text-emerald-100 active:scale-[0.98] disabled:opacity-40"}
+        >
+          {t.clear}
+        </button>
+        <button
+          type="button"
+          onClick={analyze}
+          disabled={!canAnalyze}
+          className="h-12 rounded-2xl bg-chip-red font-semibold text-white shadow-lg shadow-red-950/40 active:scale-[0.98] disabled:opacity-40"
+        >
+          {t.analyze}
+        </button>
       </div>
     </section>
   );
@@ -428,7 +425,6 @@ export default function App() {
     setTheme,
     addPickedCard,
     removePickedCard,
-    removeLastPickedCard,
     analyze,
     clear,
     isResultDialogOpen,
@@ -444,7 +440,7 @@ export default function App() {
   const canAnalyze = pickedCards.length === 5;
 
   return (
-    <main className={isLight ? "min-h-screen bg-felt-pattern-light px-4 pb-28 pt-6 text-slate-900" : "min-h-screen bg-felt-pattern px-4 pb-28 pt-6 text-white"}>
+    <main className={isLight ? "min-h-screen bg-felt-pattern-light px-4 pb-8 pt-6 text-slate-900" : "min-h-screen bg-felt-pattern px-4 pb-8 pt-6 text-white"}>
       <section className="mx-auto w-full max-w-md space-y-4">
         <header className={isLight ? "rounded-3xl border border-slate-300 bg-white p-5 shadow-xl" : "rounded-3xl border border-white/20 bg-black/30 p-5 shadow-panel backdrop-blur-md"}>
           <div className="mb-3 flex justify-end">
@@ -459,8 +455,9 @@ export default function App() {
             pickedCards={pickedCards}
             addPickedCard={addPickedCard}
             removePickedCard={removePickedCard}
-            removeLastPickedCard={removeLastPickedCard}
             clear={clear}
+            analyze={analyze}
+            canAnalyze={canAnalyze}
             t={t}
             isLight={isLight}
           />
@@ -474,26 +471,6 @@ export default function App() {
       </section>
 
       <ResultDialog open={isResultDialogOpen} onClose={closeResultDialog} onReset={clear} result={result} t={t} language={language} isLight={isLight} />
-
-      <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
-        <div className={isLight ? "grid grid-cols-2 gap-3 rounded-3xl border border-slate-300 bg-white p-3 shadow-2xl" : "grid grid-cols-2 gap-3 rounded-3xl border border-white/20 bg-black/55 p-3 backdrop-blur-md"}>
-          <button
-            type="button"
-            onClick={clear}
-            className={isLight ? "h-12 rounded-2xl border border-slate-300 bg-slate-100 font-semibold text-slate-700 active:scale-[0.98]" : "h-12 rounded-2xl border border-emerald-100/25 bg-emerald-950/50 font-semibold text-emerald-100 active:scale-[0.98]"}
-          >
-            {t.clear}
-          </button>
-          <button
-            type="button"
-            onClick={analyze}
-            disabled={!canAnalyze}
-            className="h-12 rounded-2xl bg-chip-red font-semibold text-white shadow-lg shadow-red-950/40 active:scale-[0.98] disabled:opacity-40"
-          >
-            {t.analyze}
-          </button>
-        </div>
-      </div>
     </main>
   );
 }

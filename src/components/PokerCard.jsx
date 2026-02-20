@@ -12,13 +12,14 @@ function parseDisplay(value) {
 export default function PokerCard({ value, compact = false, size = null }) {
   let sizeClass = "h-28 w-20";
   if (compact || size === "compact") sizeClass = "h-24 w-16";
-  if (size === "tiny") sizeClass = "h-20 w-14";
+  if (size === "tiny") sizeClass = "h-[5.25rem] w-[3.75rem]";
 
   const { rank, suit } = parseDisplay(value);
   const suitSymbol = suitText[suit] ?? "";
   const isRed = suit === "H" || suit === "D";
   const tone = isRed ? "text-red-600" : "text-slate-900";
-  const centerText = rank;
+  const isAce = rank === "A";
+  const centerText = isAce && suitSymbol ? suitSymbol : rank;
 
   return (
     <div
@@ -42,7 +43,7 @@ export default function PokerCard({ value, compact = false, size = null }) {
 
       <div className={["relative z-10 flex h-full flex-col items-center justify-center gap-1", tone].join(" ")}>
         <span className="text-2xl font-semibold tracking-wide">{centerText}</span>
-        {suitSymbol ? <span className="text-xl">{suitSymbol}</span> : null}
+        {suitSymbol && !isAce ? <span className="text-xl">{suitSymbol}</span> : null}
       </div>
     </div>
   );
