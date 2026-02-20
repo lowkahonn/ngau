@@ -24,7 +24,7 @@ const I18N = {
     title: "Ngau 計算器",
     subtitle: "點選 5 張牌即可計算，支援 10、AS、3/6 互換。",
     pickerTitle: "點選選牌（最多 5 張）",
-    pickerHint: "點牌面加入，點已選卡可移除。下方可直接選 A 花色。",
+    pickerHint: "點牌面加入，點已選卡可移除。上方可直接選 A 花色。",
     pickerCount: (count) => `已選 ${count}/5`,
     pickerRanks: "牌面快速鍵",
     pickerAces: "A 花色快速鍵",
@@ -38,6 +38,7 @@ const I18N = {
     noResultBody: "目前這 5 張牌無法排出符合底牌條件（可整除 10）的組合。",
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
+    allCardsRow: "原始牌：5 張",
     handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
     handTypeOnly: (name) => `牌型：${name}`,
     rulesTitle: "Ngau 規則重點",
@@ -55,7 +56,7 @@ const I18N = {
     title: "Ngau 计算器",
     subtitle: "点选 5 张牌即可计算，支持 10、AS、3/6 互换。",
     pickerTitle: "点击选牌（最多 5 张）",
-    pickerHint: "点牌面加入，点已选卡可移除。下方可直接选 A 花色。",
+    pickerHint: "点牌面加入，点已选卡可移除。上方可直接选 A 花色。",
     pickerCount: (count) => `已选 ${count}/5`,
     pickerRanks: "牌面快捷键",
     pickerAces: "A 花色快捷键",
@@ -69,6 +70,7 @@ const I18N = {
     noResultBody: "当前这 5 张牌无法排出符合底牌条件（可整除 10）的组合。",
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
+    allCardsRow: "原始牌：5 张",
     handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
     handTypeOnly: (name) => `牌型：${name}`,
     rulesTitle: "Ngau 规则重点",
@@ -86,7 +88,7 @@ const I18N = {
     title: "Ngau Calculator",
     subtitle: "Pick 5 cards to analyze. Supports 10, AS, and 3/6 swap.",
     pickerTitle: "Tap to pick cards (max 5)",
-    pickerHint: "Tap a rank to add, tap a picked card to remove. Use Ace suit shortcuts below.",
+    pickerHint: "Tap a rank to add, tap a picked card to remove. Use Ace suit shortcuts above.",
     pickerCount: (count) => `Picked ${count}/5`,
     pickerRanks: "Quick Rank Picks",
     pickerAces: "Ace Suit Shortcuts",
@@ -100,6 +102,7 @@ const I18N = {
     noResultBody: "These 5 cards cannot form a valid base that is divisible by 10.",
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
+    allCardsRow: "Input cards: 5",
     handLine: (name, points) => `Type: ${name} | Points: ${points}`,
     handTypeOnly: (name) => `Type: ${name}`,
     rulesTitle: "Ngau Rule Highlights",
@@ -151,6 +154,15 @@ function localizeHandName(name, language) {
   return name;
 }
 
+function formatDisplayPoints(best) {
+  if (best.name === "孖寶") {
+    if (best.points === 11) return "J";
+    if (best.points === 12) return "Q";
+    if (best.points === 13) return "K";
+  }
+  return best.points;
+}
+
 function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight }) {
   return (
     <section className={isLight ? "rounded-2xl border border-slate-300 bg-slate-100 p-3" : "rounded-2xl border border-white/15 bg-black/20 p-3"}>
@@ -170,6 +182,19 @@ function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight
   );
 }
 
+function AllCardsRow({ cards, label, isLight }) {
+  return (
+    <section className={isLight ? "rounded-2xl border border-slate-300 bg-slate-100 p-3" : "rounded-2xl border border-white/15 bg-black/20 p-3"}>
+      <p className={isLight ? "mb-2 text-xs tracking-[0.16em] text-emerald-900/80" : "mb-2 text-xs tracking-[0.16em] text-emerald-100/80"}>{label}</p>
+      <div className="flex justify-center gap-2">
+        {cards.map((card, index) => (
+          <PokerCard key={`all-${card}-${index}`} value={card} size="compact" />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ResultPanel({ result, t, language, isLight }) {
   if (!result?.best) {
     return (
@@ -183,6 +208,7 @@ function ResultPanel({ result, t, language, isLight }) {
   const { best } = result;
   const baseCards = formatCards(best.baseCards, { useFace: true });
   const pointCards = formatCards(best.pointCards, { useFace: true });
+  const allCards = formatCards(result.cards ?? [], { useFace: true });
 
   return (
     <section className="space-y-4">
@@ -192,12 +218,17 @@ function ResultPanel({ result, t, language, isLight }) {
         </div>
 
         {best.name === "五張公" ? (
-          <p className={isLight ? "mt-3 text-sm text-slate-800" : "mt-3 text-sm text-emerald-50"}>{t.handLine(localizeHandName("五張公", language), best.points)}</p>
+          <div className="mt-3 space-y-3">
+            <AllCardsRow cards={allCards} label={t.allCardsRow} isLight={isLight} />
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handTypeOnly(localizeHandName("五張公", language))}</p>
+          </div>
         ) : (
           <div className="mt-3 space-y-3">
             <ArrangementRows pointCards={pointCards} baseCards={baseCards} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
             <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>
-              {best.name === "牛冬菇" ? t.handTypeOnly(localizeHandName(best.name, language)) : t.handLine(localizeHandName(best.name, language), best.points)}
+              {best.name === "牛冬菇"
+                ? t.handTypeOnly(localizeHandName(best.name, language))
+                : t.handLine(localizeHandName(best.name, language), formatDisplayPoints(best))}
             </p>
           </div>
         )}
@@ -289,6 +320,24 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, anal
       </div>
 
       <div>
+        <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerAces}</p>
+        <div className="mt-2 grid grid-cols-4 gap-2">
+          {ACE_SUIT_OPTIONS.map((option) => (
+            <button
+              key={option.token}
+              type="button"
+              onClick={() => addPickedCard(option.token)}
+              disabled={disabled}
+              aria-label={`add-${option.token}`}
+              className={isLight ? "h-12 touch-manipulation rounded-2xl border border-slate-300 bg-white px-2 text-sm font-semibold text-slate-700 disabled:opacity-40" : "h-12 touch-manipulation rounded-2xl border border-white/20 bg-black/35 px-2 text-sm font-semibold text-emerald-50 disabled:opacity-40"}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
         <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerRanks}</p>
         <div className="mt-2 grid grid-cols-4 gap-2">
           {RANK_OPTIONS.map((rank) => (
@@ -301,24 +350,6 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, anal
               className={isLight ? "h-12 touch-manipulation rounded-2xl border border-slate-300 bg-white px-2 text-sm font-semibold text-slate-700 disabled:opacity-40" : "h-12 touch-manipulation rounded-2xl border border-white/20 bg-black/35 px-2 text-sm font-semibold text-emerald-50 disabled:opacity-40"}
             >
               {rank}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <p className={isLight ? "text-xs tracking-[0.16em] text-slate-700" : "text-xs tracking-[0.16em] text-emerald-100/75"}>{t.pickerAces}</p>
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          {ACE_SUIT_OPTIONS.map((option) => (
-            <button
-              key={option.token}
-              type="button"
-              onClick={() => addPickedCard(option.token)}
-              disabled={disabled}
-              aria-label={`add-${option.token}`}
-              className={isLight ? "h-12 touch-manipulation rounded-2xl border border-slate-300 bg-white px-2 text-sm font-semibold text-slate-700 disabled:opacity-40" : "h-12 touch-manipulation rounded-2xl border border-white/20 bg-black/35 px-2 text-sm font-semibold text-emerald-50 disabled:opacity-40"}
-            >
-              {option.label}
             </button>
           ))}
         </div>
