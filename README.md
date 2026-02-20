@@ -29,8 +29,7 @@ npm run preview
 2. Push to `main`.
 3. Workflow `.github/workflows/deploy-pages.yml` builds and deploys `dist`.
 
-`vite.config.js` auto-detects repository path in GitHub Actions and sets `base` accordingly.
-If you need a custom path, set `VITE_BASE_PATH`.
+`vite.config.js` uses a relative base (`./`) so built assets and page links work under repo subpaths like `/<repo>/` on GitHub Pages.
 
 ## SEO setup
 

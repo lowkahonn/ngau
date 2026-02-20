@@ -3,8 +3,6 @@ import react from "@vitejs/plugin-react";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repository = process.env.GITHUB_REPOSITORY?.split("/")[1];
-const isGithubActions = Boolean(process.env.GITHUB_ACTIONS);
 const rootDir = dirname(fileURLToPath(import.meta.url));
 
 const htmlEntries = [
@@ -20,7 +18,7 @@ const rollupInput = Object.fromEntries(htmlEntries.map((file) => [file.replace("
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_BASE_PATH ?? (isGithubActions && repository ? `/${repository}/` : "/"),
+  base: "./",
   build: {
     rollupOptions: {
       input: rollupInput

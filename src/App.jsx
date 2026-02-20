@@ -311,7 +311,6 @@ function RulesContent({ t, isLight }) {
 }
 
 function GuidePages({ t, isLight }) {
-  const baseUrl = import.meta.env.BASE_URL ?? "/";
   const pages = [
     { href: "how-to-play-ngau.html", label: t.guideHowToPlay },
     { href: "ngau-rules-explained.html", label: t.guideRules },
@@ -328,7 +327,7 @@ function GuidePages({ t, isLight }) {
         {pages.map((page) => (
           <a
             key={page.href}
-            href={`${baseUrl}${page.href}`}
+            href={page.href}
             className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700" : "rounded-xl border border-white/20 bg-black/25 px-3 py-2 text-sm font-medium text-emerald-100"}
           >
             {page.label}

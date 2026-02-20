@@ -30,7 +30,7 @@ This file gives coding agents the minimum context needed to work safely and quic
 - Production build: `npm run build`
 - Preview build: `npm run preview`
 - Python tests: `python3 -m unittest -q`
-- GitHub Pages base-path smoke test: `VITE_BASE_PATH=/ngau/ npm run build`
+- Path smoke test: `npm run build` then inspect `dist/*.html` for `./...` internal URLs
 
 ## GitHub Pages Base-Path Rules (Critical)
 
@@ -38,15 +38,11 @@ This site is hosted under a repository path, not the domain root.
 
 - Target hosting shape: `https://<username>.github.io/ngau/`
 - Do not assume internal links/assets are served from `/`.
-- In React/JS, build internal URLs from `import.meta.env.BASE_URL`.
-- In standalone HTML pages, use `%BASE_URL%...` for links/assets that should point to this site root.
+- Use relative links/assets (for example `./site.webmanifest`, `./content-pages.css`, `how-to-play-ngau.html`).
 - Keep sibling article links relative (for example `ngau-faq.html`) so they work within the same folder.
 - Use `%VITE_SITE_URL%...` for canonical/OG absolute URLs.
 
-When changing links/assets, always validate with:
-
-- `VITE_BASE_PATH=/ngau/ npm run build`
-- Then inspect `dist/*.html` to confirm generated URLs include `/ngau/` where expected.
+When changing links/assets, always validate with `npm run build`, then inspect `dist/*.html` to confirm internal URLs remain relative (`./...` or sibling filenames).
 
 ## Change Playbooks
 
@@ -74,6 +70,5 @@ When changing links/assets, always validate with:
 
 - `VITE_SITE_URL` should be an absolute URL with trailing slash for canonical/sitemap correctness.
 - CI sets `VITE_SITE_URL` in `deploy-pages.yml` using the GitHub repo owner/name.
-- `VITE_BASE_PATH` can override base path locally; CI normally derives base from `GITHUB_REPOSITORY`.
+- Vite build base is fixed to `./` so generated asset paths stay relative.
 - `VITE_ADSENSE_SLOT_PHASE1` must be a real numeric ad slot ID for ads to render in production.
-
