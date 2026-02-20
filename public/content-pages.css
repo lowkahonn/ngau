@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap");
+
+:root {
+  color-scheme: light;
+  --bg-main: #f7f2e6;
+  --bg-card: #ffffff;
+  --text-main: #123028;
+  --text-muted: #446259;
+  --line: #d8d8cf;
+  --accent: #15624f;
+  --accent-strong: #0f4b3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", "PingFang TC", sans-serif;
+  color: var(--text-main);
+  background:
+    radial-gradient(circle at 10% 8%, #ffffff 0%, rgba(255, 255, 255, 0.45) 34%, rgba(255, 255, 255, 0) 56%),
+    radial-gradient(circle at 92% 2%, rgba(213, 239, 228, 0.8) 0%, rgba(213, 239, 228, 0) 40%),
+    linear-gradient(170deg, #faf5e9 0%, var(--bg-main) 45%, #eee4d0 100%);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.shell {
+  margin: 0 auto;
+  max-width: 920px;
+  padding: 20px 16px 56px;
+}
+
+.home-link {
+  display: inline-flex;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.hero {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--bg-card);
+  padding: 24px 20px;
+  box-shadow: 0 18px 35px rgba(18, 48, 40, 0.08);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+h1 {
+  margin: 8px 0 10px;
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-size: clamp(28px, 5vw, 38px);
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.guide-nav {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.guide-nav a {
+  border: 1px solid #c8d7d1;
+  border-radius: 999px;
+  background: #edf5f1;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.guide-nav a.active {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: #fff;
+}
+
+.panel {
+  margin-top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--bg-card);
+  padding: 18px 18px;
+  box-shadow: 0 14px 30px rgba(20, 52, 43, 0.07);
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+h3 {
+  margin: 14px 0 8px;
+  font-size: 18px;
+}
+
+p,
+li {
+  line-height: 1.72;
+}
+
+ul,
+ol {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+
+.tip {
+  margin-top: 12px;
+  border-left: 4px solid var(--accent);
+  background: #f1f8f5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #174237;
+}
+
+.cta {
+  margin-top: 18px;
+  display: inline-flex;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 14px;
+}
+
+.faq-item {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.footer-note {
+  margin-top: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 12px 12px 46px;
+  }
+
+  .hero,
+  .panel {
+    border-radius: 20px;
+  }
+}

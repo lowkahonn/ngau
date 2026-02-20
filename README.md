@@ -41,6 +41,12 @@ If you need a custom path, set `VITE_BASE_PATH`.
 ## SEO setup
 
 - `index.html` includes canonical URL, Open Graph tags, Twitter card tags, and JSON-LD (`WebApplication`).
+- Content subpages are built as standalone HTML entries:
+  - `how-to-play-ngau.html`
+  - `ngau-rules-explained.html`
+  - `ngau-3-6-explained.html`
+  - `ngau-example-rounds.html`
+  - `ngau-faq.html`
 - `npm run build` runs `npm run seo:generate` first to generate:
   - `public/robots.txt`
   - `public/sitemap.xml`

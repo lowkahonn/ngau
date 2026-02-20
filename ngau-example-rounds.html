@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Ngau Example Rounds (實戰例子) | Ngau Calculator</title>
+    <meta
+      name="description"
+      content="Ngau example rounds with step-by-step arrangement choices, base validation, point-hand calculation, and better alternatives using 3/6 swap."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-example-rounds.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Ngau Example Rounds" />
+    <meta
+      property="og:description"
+      content="See complete Ngau rounds broken down from raw cards to final strongest arrangement."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-example-rounds.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ngau Example Rounds" />
+    <meta
+      name="twitter:description"
+      content="Worked Ngau examples you can replay in the calculator to build decision speed."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Ngau Example Rounds (實戰例子)",
+        "description": "Step-by-step worked examples for Ngau hand arrangement and scoring.",
+        "author": {
+          "@type": "Organization",
+          "name": "Ngau Calculator"
+        },
+        "mainEntityOfPage": "%VITE_SITE_URL%ngau-example-rounds.html",
+        "inLanguage": "zh-Hant"
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
+
+      <header class="hero">
+        <p class="eyebrow">PRACTICE CASES</p>
+        <h1>Ngau Example Rounds (實戰例子)</h1>
+        <p class="lede">
+          這些例子用真實流程示範：先驗證底牌，再比較點牌，最後選出最佳結果。你可以直接把牌組輸入計算器，逐步對照理解。
+        </p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau.html">How to Play</a>
+          <a href="ngau-rules-explained.html">Rules</a>
+          <a href="ngau-3-6-explained.html">3/6 Swap</a>
+          <a class="active" href="ngau-example-rounds.html">Example Rounds</a>
+          <a href="ngau-faq.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>Round 1: Straightforward Valid Split</h2>
+        <p><strong>Hand:</strong> AS 9 K 4 7</p>
+        <ol>
+          <li>Try base: 9 + 4 + 7 = 20, valid base.</li>
+          <li>Point cards: AS + K = 牛冬菇 condition satisfied.</li>
+          <li>Result becomes a high-priority special hand.</li>
+        </ol>
+
+        <h3>Takeaway</h3>
+        <p>
+          有 AS 配 J/Q/K 時，通常值得先測試能否湊出合法底牌。只要底牌合法，牛冬菇往往會成為最有力結果。
+        </p>
+      </article>
+
+      <article class="panel">
+        <h2>Round 2: 3/6 Swap Unlocks Better Result</h2>
+        <p><strong>Hand:</strong> 3 6 8 J K</p>
+        <ol>
+          <li>Without swap, some base choices are weak or invalid.</li>
+          <li>Swap one of 3/6 states and retry base combinations.</li>
+          <li>A new valid base appears, and point cards can move to stronger output.</li>
+        </ol>
+
+        <p class="tip">
+          If a hand looks close but not quite legal, 3/6 swap is often the first lever to test.
+        </p>
+      </article>
+
+      <article class="panel">
+        <h2>Round 3: Pair Versus 10 Points Decision</h2>
+        <p><strong>Hand:</strong> Q Q 2 8 K</p>
+        <ol>
+          <li>Base 2 + 8 + K(10) = 20 is valid.</li>
+          <li>Point pair Q + Q forms 孖寶 with multiplier advantage.</li>
+          <li>Even if another split can produce 10 points, multiplier comparison may still favor pair.</li>
+        </ol>
+
+        <h3>Takeaway</h3>
+        <p>
+          不要只看「點數看起來高」。實際比較時，倍數權重很關鍵，孖寶常常能勝過看似不錯的普通點數。
+        </p>
+
+        <a class="cta" href="%BASE_URL%">Try These Rounds in Calculator</a>
+      </article>
+
+      <p class="footer-note">Updated: February 20, 2026</p>
+    </main>
+  </body>
+</html>

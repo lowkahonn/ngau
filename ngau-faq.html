@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Ngau FAQ | Ngau Calculator</title>
+    <meta
+      name="description"
+      content="Ngau FAQ covering hand validity, Ace handling, 3/6 swap, pair ranking, and common calculator questions for new and returning players."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="%VITE_SITE_URL%ngau-faq.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Ngau FAQ" />
+    <meta
+      property="og:description"
+      content="Answers to common Ngau questions about rules, scoring edge cases, and calculator behavior."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%ngau-faq.html" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ngau FAQ" />
+    <meta
+      name="twitter:description"
+      content="Clear answers for players asking how Ngau hand scoring and special rules are handled in this tool."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is a valid Ngau arrangement?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A valid arrangement must split 5 cards into 3 base cards and 2 point cards, where the base total is divisible by 10."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does any Ace trigger Niu Dong Gu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Direct Niu Dong Gu requires black spade Ace (AS) with J, Q, or K as point cards, plus a valid base."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does 3/6 swap affect results?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The calculator evaluates all 3/6 swap combinations and picks the strongest legal outcome among them."
+            }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
+
+      <header class="hero">
+        <p class="eyebrow">HELP CENTER</p>
+        <h1>Ngau FAQ</h1>
+        <p class="lede">
+          常見問題整理，涵蓋排牌合法性、A 的判定、3/6 互換、孖寶與點數比較。若你在對局中遇到爭議，先從這頁開始查。
+        </p>
+        <nav class="guide-nav" aria-label="Guide pages">
+          <a href="how-to-play-ngau.html">How to Play</a>
+          <a href="ngau-rules-explained.html">Rules</a>
+          <a href="ngau-3-6-explained.html">3/6 Swap</a>
+          <a href="ngau-example-rounds.html">Example Rounds</a>
+          <a class="active" href="ngau-faq.html">FAQ</a>
+        </nav>
+      </header>
+
+      <article class="panel">
+        <h2>Frequently Asked Questions</h2>
+
+        <section class="faq-item">
+          <h3>1) What if no valid base can be formed?</h3>
+          <p>
+            If none of the 3-card base combinations sum to a multiple of 10, that hand has no valid arrangement under this ruleset.
+            計算器會直接顯示「找不到合法排法」。
+          </p>
+        </section>
+
+        <section class="faq-item">
+          <h3>2) Is A always AS in input?</h3>
+          <p>
+            No. You can input plain <strong>A</strong> without suit. For direct 牛冬菇 recognition, the point card must be explicit <strong>AS</strong> with J/Q/K.
+            If suit is unknown, the calculator can show an assumed Ace outcome separately.
+          </p>
+        </section>
+
+        <section class="faq-item">
+          <h3>3) Which is stronger: 孖寶 or 10點?</h3>
+          <p>
+            In this implementation, multiplier is prioritized. 孖寶 has multiplier 3 and 10點 has multiplier 2, so pair often ranks above 10-point outcomes.
+          </p>
+        </section>
+
+        <section class="faq-item">
+          <h3>4) Why does the calculator sometimes choose a split with lower-looking points?</h3>
+          <p>
+            Because the ranking is not based on points alone. It compares multiplier first, then points, then kicker. A lower visible number can still be the stronger full outcome.
+          </p>
+        </section>
+
+        <section class="faq-item">
+          <h3>5) Should I always manually test all 3/6 swaps?</h3>
+          <p>
+            You can, but it is error-prone in fast play. This calculator already checks every swap variant and returns the best legal result, which is faster and safer.
+          </p>
+        </section>
+
+        <a class="cta" href="%BASE_URL%">Open Calculator</a>
+      </article>
+
+      <p class="footer-note">Updated: February 20, 2026</p>
+    </main>
+  </body>
+</html>

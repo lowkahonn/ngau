@@ -35,7 +35,14 @@ const I18N = {
     handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
     rulesTitle: "Ngau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
-    rulesBody2: "適合快速試算與排牌練習。"
+    rulesBody2: "適合快速試算與排牌練習。",
+    guideTitle: "玩法與規則文章",
+    guideBody: "想提高勝率與理解判定邏輯？以下子頁整理了玩法流程、3/6 互換與實戰例子。",
+    guideHowToPlay: "How to play Ngau (牛牛玩法)",
+    guideRules: "Rules explanation",
+    guideSwap: "3/6 explanation",
+    guideExamples: "Example rounds",
+    guideFaq: "FAQ"
   },
   "zh-Hans": {
     title: "Ngau 计算器",
@@ -59,7 +66,14 @@ const I18N = {
     handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
     rulesTitle: "Ngau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
-    rulesBody2: "适合快速试算与排牌练习。"
+    rulesBody2: "适合快速试算与排牌练习。",
+    guideTitle: "玩法与规则文章",
+    guideBody: "想提升理解和实战速度？以下子页整理了完整玩法、3/6 互换和示例对局。",
+    guideHowToPlay: "How to play Ngau (牛牛玩法)",
+    guideRules: "Rules explanation",
+    guideSwap: "3/6 explanation",
+    guideExamples: "Example rounds",
+    guideFaq: "FAQ"
   },
   en: {
     title: "Ngau Calculator",
@@ -83,7 +97,14 @@ const I18N = {
     handLine: (name, points) => `Type: ${name} | Points: ${points}`,
     rulesTitle: "Ngau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
-    rulesBody2: "Built for quick checking and practice."
+    rulesBody2: "Built for quick checking and practice.",
+    guideTitle: "Learn Ngau",
+    guideBody: "Use these subpages for gameplay flow, detailed rules, 3/6 swap strategy, examples, and FAQ.",
+    guideHowToPlay: "How to play Ngau (牛牛玩法)",
+    guideRules: "Rules explanation",
+    guideSwap: "3/6 explanation",
+    guideExamples: "Example rounds",
+    guideFaq: "FAQ"
   }
 };
 
@@ -290,6 +311,35 @@ function RulesContent({ t, isLight }) {
   );
 }
 
+function GuidePages({ t, isLight }) {
+  const baseUrl = import.meta.env.BASE_URL ?? "/";
+  const pages = [
+    { href: "how-to-play-ngau.html", label: t.guideHowToPlay },
+    { href: "ngau-rules-explained.html", label: t.guideRules },
+    { href: "ngau-3-6-explained.html", label: t.guideSwap },
+    { href: "ngau-example-rounds.html", label: t.guideExamples },
+    { href: "ngau-faq.html", label: t.guideFaq }
+  ];
+
+  return (
+    <section className={isLight ? "space-y-3 rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "space-y-3 rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
+      <h2 className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>{t.guideTitle}</h2>
+      <p className={isLight ? "text-sm leading-relaxed text-slate-700" : "text-sm leading-relaxed text-emerald-100/85"}>{t.guideBody}</p>
+      <div className="grid gap-2">
+        {pages.map((page) => (
+          <a
+            key={page.href}
+            href={`${baseUrl}${page.href}`}
+            className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700" : "rounded-xl border border-white/20 bg-black/25 px-3 py-2 text-sm font-medium text-emerald-100"}
+          >
+            {page.label}
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function MinimalSwitches({ language, setLanguage, theme, setTheme, isLight }) {
   return (
     <div className="flex items-center gap-2">
@@ -376,6 +426,7 @@ export default function App() {
         </section>
 
         <RulesContent t={t} isLight={isLight} />
+        <GuidePages t={t} isLight={isLight} />
         <AdSenseSlot isLight={isLight} />
       </section>
 
