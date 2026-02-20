@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import AdSenseSlot from "./components/AdSenseSlot";
 import PokerCard from "./components/PokerCard";
+import ResultConfetti from "./components/ResultConfetti";
 import { formatCards } from "./lib/gnau";
 import { useGnauStore } from "./store/useGnauStore";
 
@@ -187,30 +188,33 @@ function ResultDialog({ open, onClose, onReset, result, t, language, isLight }) 
         aria-modal="true"
         className={isLight ? "relative z-10 w-full max-w-lg rounded-t-3xl border border-slate-300 bg-[#f8f6ef] p-4 shadow-2xl sm:rounded-3xl" : "relative z-10 w-full max-w-lg rounded-t-3xl border border-white/20 bg-[#0b2b22] p-4 shadow-2xl sm:rounded-3xl"}
       >
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>{t.resultTitle}</h2>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onReset}
-              className={isLight ? "rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-900" : "rounded-xl border border-amber-200/30 bg-amber-100/10 px-3 py-1.5 text-sm font-medium text-amber-50"}
-            >
-              {t.resetResult}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className={isLight ? "rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700" : "rounded-xl border border-white/20 bg-black/20 px-3 py-1.5 text-sm text-emerald-100"}
-            >
-              {t.close}
-            </button>
+        <div className="relative z-10">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>{t.resultTitle}</h2>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onReset}
+                className={isLight ? "rounded-xl border border-amber-300 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-900" : "rounded-xl border border-amber-200/30 bg-amber-100/10 px-3 py-1.5 text-sm font-medium text-amber-50"}
+              >
+                {t.resetResult}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className={isLight ? "rounded-xl border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700" : "rounded-xl border border-white/20 bg-black/20 px-3 py-1.5 text-sm text-emerald-100"}
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
+
+          <div className="max-h-[75vh] overflow-y-auto pr-1">
+            <ResultPanel result={result} t={t} language={language} isLight={isLight} />
           </div>
         </div>
-
-        <div className="max-h-[75vh] overflow-y-auto pr-1">
-          <ResultPanel result={result} t={t} language={language} isLight={isLight} />
-        </div>
       </section>
+      <ResultConfetti open={open} best={result?.best} />
     </div>
   );
 }
@@ -227,14 +231,14 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, anal
           <p className={isLight ? "text-xs font-semibold text-emerald-700" : "text-xs font-semibold text-emerald-200"}>{t.pickerCount(pickedCards.length)}</p>
         </div>
         <p className={isLight ? "mt-1 text-xs text-slate-600" : "mt-1 text-xs text-emerald-100/65"}>{t.pickerHint}</p>
-        <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">
+        <div className="mt-2 grid grid-cols-5 gap-1.5 sm:gap-2">
           {Array.from({ length: 5 }, (_, index) => {
             const value = pickedCards[index];
             if (!value) {
               return (
                 <div
                   key={`empty-${index}`}
-                  className={isLight ? "flex h-[5.25rem] w-[3.75rem] shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-400 bg-white text-xs text-slate-500" : "flex h-[5.25rem] w-[3.75rem] shrink-0 items-center justify-center rounded-lg border border-dashed border-emerald-100/25 bg-black/25 text-xs text-emerald-100/50"}
+                  className={isLight ? "flex aspect-[3/4] w-full items-center justify-center rounded-lg border border-dashed border-slate-400 bg-white text-xs text-slate-500" : "flex aspect-[3/4] w-full items-center justify-center rounded-lg border border-dashed border-emerald-100/25 bg-black/25 text-xs text-emerald-100/50"}
                 >
                   +
                 </div>
@@ -245,10 +249,10 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, anal
                 key={`${value}-${index}`}
                 type="button"
                 onClick={() => removePickedCard(index)}
-                className="shrink-0 rounded-lg active:scale-[0.98]"
+                className="aspect-[3/4] w-full overflow-hidden rounded-lg active:scale-[0.98]"
                 aria-label={`remove-card-${index}`}
               >
-                <PokerCard value={value} size="tiny" />
+                <PokerCard value={value} size="picker" />
               </button>
             );
           })}
