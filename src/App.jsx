@@ -39,6 +39,7 @@ const I18N = {
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
     handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
+    handTypeOnly: (name) => `牌型：${name}`,
     rulesTitle: "Ngau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
     rulesBody2: "適合快速試算與排牌練習。",
@@ -69,6 +70,7 @@ const I18N = {
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
     handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
+    handTypeOnly: (name) => `牌型：${name}`,
     rulesTitle: "Ngau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
     rulesBody2: "适合快速试算与排牌练习。",
@@ -99,6 +101,7 @@ const I18N = {
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
     handLine: (name, points) => `Type: ${name} | Points: ${points}`,
+    handTypeOnly: (name) => `Type: ${name}`,
     rulesTitle: "Ngau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
     rulesBody2: "Built for quick checking and practice.",
@@ -169,7 +172,9 @@ function ResultPanel({ result, t, language, isLight }) {
         ) : (
           <div className="mt-3 space-y-3">
             <ArrangementRows pointCards={pointCards} baseCards={baseCards} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
-            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handLine(localizeHandName(best.name, language), best.points)}</p>
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>
+              {best.name === "牛冬菇" ? t.handTypeOnly(localizeHandName(best.name, language)) : t.handLine(localizeHandName(best.name, language), best.points)}
+            </p>
           </div>
         )}
       </article>
