@@ -24,7 +24,19 @@ function applyRuntimeSeoFallbacks() {
   }
 }
 
+function registerServiceWorker() {
+  if (!import.meta.env.PROD || !("serviceWorker" in navigator)) return;
+
+  window.addEventListener("load", () => {
+    const swUrl = new URL("./sw.js", window.location.href);
+    navigator.serviceWorker.register(swUrl.href).catch((error) => {
+      console.error("Service worker registration failed:", error);
+    });
+  });
+}
+
 applyRuntimeSeoFallbacks();
+registerServiceWorker();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
