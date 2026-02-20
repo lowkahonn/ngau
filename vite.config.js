@@ -8,20 +8,20 @@ const rootDir = dirname(fileURLToPath(import.meta.url));
 const htmlEntries = [
   "index.html",
   "how-to-play-ngau.html",
-  "how-to-play-ngau-zh-hant.html",
-  "how-to-play-ngau-zh-hans.html",
+  "zh-hant/how-to-play-ngau.html",
+  "zh-hans/how-to-play-ngau.html",
   "ngau-rules-explained.html",
-  "ngau-rules-explained-zh-hant.html",
-  "ngau-rules-explained-zh-hans.html",
+  "zh-hant/ngau-rules-explained.html",
+  "zh-hans/ngau-rules-explained.html",
   "ngau-3-6-explained.html",
-  "ngau-3-6-explained-zh-hant.html",
-  "ngau-3-6-explained-zh-hans.html",
+  "zh-hant/ngau-3-6-explained.html",
+  "zh-hans/ngau-3-6-explained.html",
   "ngau-example-rounds.html",
-  "ngau-example-rounds-zh-hant.html",
-  "ngau-example-rounds-zh-hans.html",
+  "zh-hant/ngau-example-rounds.html",
+  "zh-hans/ngau-example-rounds.html",
   "ngau-faq.html",
-  "ngau-faq-zh-hant.html",
-  "ngau-faq-zh-hans.html"
+  "zh-hant/ngau-faq.html",
+  "zh-hans/ngau-faq.html"
 ];
 
 const rollupInput = Object.fromEntries(htmlEntries.map((file) => [file.replace(".html", ""), resolve(rootDir, file)]));

@@ -124,18 +124,18 @@ const GUIDE_PAGE_PATHS = {
     faq: "ngau-faq.html"
   },
   "zh-Hant": {
-    howToPlay: "how-to-play-ngau-zh-hant.html",
-    rules: "ngau-rules-explained-zh-hant.html",
-    swap: "ngau-3-6-explained-zh-hant.html",
-    examples: "ngau-example-rounds-zh-hant.html",
-    faq: "ngau-faq-zh-hant.html"
+    howToPlay: "zh-hant/how-to-play-ngau.html",
+    rules: "zh-hant/ngau-rules-explained.html",
+    swap: "zh-hant/ngau-3-6-explained.html",
+    examples: "zh-hant/ngau-example-rounds.html",
+    faq: "zh-hant/ngau-faq.html"
   },
   "zh-Hans": {
-    howToPlay: "how-to-play-ngau-zh-hans.html",
-    rules: "ngau-rules-explained-zh-hans.html",
-    swap: "ngau-3-6-explained-zh-hans.html",
-    examples: "ngau-example-rounds-zh-hans.html",
-    faq: "ngau-faq-zh-hans.html"
+    howToPlay: "zh-hans/how-to-play-ngau.html",
+    rules: "zh-hans/ngau-rules-explained.html",
+    swap: "zh-hans/ngau-3-6-explained.html",
+    examples: "zh-hans/ngau-example-rounds.html",
+    faq: "zh-hans/ngau-faq.html"
   }
 };
 

@@ -26,20 +26,20 @@ const today = new Date().toISOString().slice(0, 10);
 const sitemapPages = [
   { path: "", changefreq: "weekly", priority: "1.0" },
   { path: "how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },
-  { path: "how-to-play-ngau-zh-hant.html", changefreq: "weekly", priority: "0.9" },
-  { path: "how-to-play-ngau-zh-hans.html", changefreq: "weekly", priority: "0.9" },
+  { path: "zh-hant/how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },
+  { path: "zh-hans/how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },
   { path: "ngau-rules-explained.html", changefreq: "weekly", priority: "0.9" },
-  { path: "ngau-rules-explained-zh-hant.html", changefreq: "weekly", priority: "0.9" },
-  { path: "ngau-rules-explained-zh-hans.html", changefreq: "weekly", priority: "0.9" },
+  { path: "zh-hant/ngau-rules-explained.html", changefreq: "weekly", priority: "0.9" },
+  { path: "zh-hans/ngau-rules-explained.html", changefreq: "weekly", priority: "0.9" },
   { path: "ngau-3-6-explained.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-3-6-explained-zh-hant.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-3-6-explained-zh-hans.html", changefreq: "weekly", priority: "0.8" },
+  { path: "zh-hant/ngau-3-6-explained.html", changefreq: "weekly", priority: "0.8" },
+  { path: "zh-hans/ngau-3-6-explained.html", changefreq: "weekly", priority: "0.8" },
   { path: "ngau-example-rounds.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-example-rounds-zh-hant.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-example-rounds-zh-hans.html", changefreq: "weekly", priority: "0.8" },
+  { path: "zh-hant/ngau-example-rounds.html", changefreq: "weekly", priority: "0.8" },
+  { path: "zh-hans/ngau-example-rounds.html", changefreq: "weekly", priority: "0.8" },
   { path: "ngau-faq.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-faq-zh-hant.html", changefreq: "weekly", priority: "0.8" },
-  { path: "ngau-faq-zh-hans.html", changefreq: "weekly", priority: "0.8" }
+  { path: "zh-hant/ngau-faq.html", changefreq: "weekly", priority: "0.8" },
+  { path: "zh-hans/ngau-faq.html", changefreq: "weekly", priority: "0.8" }
 ];
 const publicDir = resolve(process.cwd(), "public");
 mkdirSync(publicDir, { recursive: true });
