@@ -37,8 +37,6 @@ const I18N = {
     noResultBody: "目前這 5 張牌無法排出符合底牌條件（可整除 10）的組合。",
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
-    assumedTitle: "A 假設排法（A 當黑桃 A）",
-    assumedMissing: "無法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
     handLine: (name, points) => `牌型：${name} ｜ 點數：${points}`,
     rulesTitle: "Ngau 規則重點",
     rulesBody1: "本工具會自動找出最佳排牌，涵蓋底牌 3 張、點牌 2 張、3/6 互換、孖寶按原始牌面、10 點、五張公、牛冬菇。",
@@ -69,8 +67,6 @@ const I18N = {
     noResultBody: "当前这 5 张牌无法排出符合底牌条件（可整除 10）的组合。",
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
-    assumedTitle: "A 假设排法（A 当黑桃 A）",
-    assumedMissing: "无法排出牛冬菇（需 A + J/Q/K 且底牌可整除 10）。",
     handLine: (name, points) => `牌型：${name} ｜ 点数：${points}`,
     rulesTitle: "Ngau 规则重点",
     rulesBody1: "本工具会自动找出最佳排牌，涵盖底牌 3 张、点牌 2 张、3/6 互换、孖宝按原始牌面、10 点、五张公、牛冬菇。",
@@ -101,8 +97,6 @@ const I18N = {
     noResultBody: "These 5 cards cannot form a valid base that is divisible by 10.",
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
-    assumedTitle: "Ace Assumed Combo (A as Spade Ace)",
-    assumedMissing: "No Niu Dong Gu combo found (requires A + J/Q/K and base divisible by 10).",
     handLine: (name, points) => `Type: ${name} | Points: ${points}`,
     rulesTitle: "Ngau Rule Highlights",
     rulesBody1: "This calculator finds the best arrangement with 3 base cards + 2 point cards, including 3/6 swaps, pair by original face value, 10 points, Five Face, and Niu Dong Gu.",
@@ -148,12 +142,6 @@ function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight
   );
 }
 
-function comboKey(result, assumeSpadeAce = false) {
-  const base = formatCards(result.baseCards, { useFace: true, assumeSpadeAce }).join("|");
-  const points = formatCards(result.pointCards, { useFace: true, assumeSpadeAce }).join("|");
-  return `${result.name}::${result.multiplier}::${result.points}::${points}::${base}`;
-}
-
 function ResultPanel({ result, t, language, isLight }) {
   if (!result?.best) {
     return (
@@ -164,15 +152,9 @@ function ResultPanel({ result, t, language, isLight }) {
     );
   }
 
-  const { best, assumed, hasAce } = result;
+  const { best } = result;
   const baseCards = formatCards(best.baseCards, { useFace: true });
   const pointCards = formatCards(best.pointCards, { useFace: true });
-
-  const assumedBase = assumed ? formatCards(assumed.baseCards, { useFace: true, assumeSpadeAce: true }) : [];
-  const assumedPoint = assumed ? formatCards(assumed.pointCards, { useFace: true, assumeSpadeAce: true }) : [];
-
-  const showAssumed = hasAce && assumed && comboKey(best, true) !== comboKey(assumed, true);
-  const showAssumedSection = (hasAce && !assumed) || showAssumed;
 
   return (
     <section className="space-y-4">
@@ -190,20 +172,6 @@ function ResultPanel({ result, t, language, isLight }) {
           </div>
         )}
       </article>
-
-      {showAssumedSection && (
-        <article className={isLight ? "rounded-3xl border border-amber-300 bg-amber-50 p-4 shadow-xl" : "rounded-3xl border border-amber-200/25 bg-amber-100/10 p-4 shadow-panel backdrop-blur-sm"}>
-          <h3 className={isLight ? "font-title text-base tracking-[0.05em] text-amber-900" : "font-title text-base tracking-[0.05em] text-amber-100"}>{t.assumedTitle}</h3>
-          {!assumed ? (
-            <p className={isLight ? "mt-2 text-sm text-amber-800" : "mt-2 text-sm text-amber-50/85"}>{t.assumedMissing}</p>
-          ) : (
-            <div className="mt-3 space-y-3">
-              <ArrangementRows pointCards={assumedPoint} baseCards={assumedBase} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
-              <p className={isLight ? "text-sm text-amber-900" : "text-sm text-amber-50"}>{t.handLine(localizeHandName("牛冬菇", language), 1)}</p>
-            </div>
-          )}
-        </article>
-      )}
     </section>
   );
 }
