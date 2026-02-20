@@ -37,10 +37,10 @@ const I18N = {
     rulesBody2: "適合快速試算與排牌練習。",
     guideTitle: "玩法與規則文章",
     guideBody: "想提高勝率與理解判定邏輯？以下子頁整理了玩法流程、3/6 互換與實戰例子。",
-    guideHowToPlay: "How to play Ngau (牛牛玩法)",
-    guideRules: "Rules explanation",
-    guideSwap: "3/6 explanation",
-    guideExamples: "Example rounds",
+    guideHowToPlay: "牛牛玩法",
+    guideRules: "規則詳解",
+    guideSwap: "3/6 互換說明",
+    guideExamples: "實戰例子",
     guideFaq: "FAQ"
   },
   "zh-Hans": {
@@ -68,10 +68,10 @@ const I18N = {
     rulesBody2: "适合快速试算与排牌练习。",
     guideTitle: "玩法与规则文章",
     guideBody: "想提升理解和实战速度？以下子页整理了完整玩法、3/6 互换和示例对局。",
-    guideHowToPlay: "How to play Ngau (牛牛玩法)",
-    guideRules: "Rules explanation",
-    guideSwap: "3/6 explanation",
-    guideExamples: "Example rounds",
+    guideHowToPlay: "牛牛玩法",
+    guideRules: "规则详解",
+    guideSwap: "3/6 互换说明",
+    guideExamples: "实战例子",
     guideFaq: "FAQ"
   },
   en: {

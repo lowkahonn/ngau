@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Ngau FAQ | Ngau Calculator</title>
     <meta
       name="description"
-      content="Ngau FAQ covering hand validity, Ace handling, 3/6 swap, pair ranking, and common calculator questions for new and returning players."
+      content="Ngau FAQ covering valid splits, Ace handling, 3/6 swap behavior, pair ranking, and common calculator questions."
     />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="%VITE_SITE_URL%ngau-faq.html" />
@@ -22,10 +22,10 @@
     <meta name="twitter:title" content="Ngau FAQ" />
     <meta
       name="twitter:description"
-      content="Clear answers for players asking how Ngau hand scoring and special rules are handled in this tool."
+      content="Clear answers for players asking how Ngau scoring and special rules are handled in this tool."
     />
     <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
-    <link rel="stylesheet" href="./content-pages.css" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -61,14 +61,12 @@
   </head>
   <body>
     <main class="shell">
-      <a class="home-link" href="./">Back to Calculator</a>
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
 
       <header class="hero">
         <p class="eyebrow">HELP CENTER</p>
         <h1>Ngau FAQ</h1>
-        <p class="lede">
-          常見問題整理，涵蓋排牌合法性、A 的判定、3/6 互換、孖寶與點數比較。若你在對局中遇到爭議，先從這頁開始查。
-        </p>
+        <p class="lede">Common questions about legal splits, Ace handling, 3/6 swaps, and ranking behavior in this calculator.</p>
         <nav class="guide-nav" aria-label="Guide pages">
           <a href="how-to-play-ngau.html">How to Play</a>
           <a href="ngau-rules-explained.html">Rules</a>
@@ -83,42 +81,30 @@
 
         <section class="faq-item">
           <h3>1) What if no valid base can be formed?</h3>
-          <p>
-            If none of the 3-card base combinations sum to a multiple of 10, that hand has no valid arrangement under this ruleset.
-            計算器會直接顯示「找不到合法排法」。
-          </p>
+          <p>If none of the 3-card base combinations sum to a multiple of 10, the hand has no valid arrangement under this ruleset.</p>
         </section>
 
         <section class="faq-item">
-          <h3>2) Is A always AS in input?</h3>
-          <p>
-            No. You can input plain <strong>A</strong> without suit. For direct 牛冬菇 recognition, the point card must be explicit <strong>AS</strong> with J/Q/K.
-            If suit is unknown, the calculator can show an assumed Ace outcome separately.
-          </p>
+          <h3>2) Is A always treated as AS in input?</h3>
+          <p>No. You can input plain <strong>A</strong> without suit. Direct Niu Dong Gu recognition requires explicit <strong>AS</strong> with J/Q/K as point cards.</p>
         </section>
 
         <section class="faq-item">
-          <h3>3) Which is stronger: 孖寶 or 10點?</h3>
-          <p>
-            In this implementation, multiplier is prioritized. 孖寶 has multiplier 3 and 10點 has multiplier 2, so pair often ranks above 10-point outcomes.
-          </p>
+          <h3>3) Which is stronger: Pair or 10 Points?</h3>
+          <p>In this implementation, multiplier is prioritized. Pair has multiplier 3 and 10 Points has multiplier 2, so Pair often ranks higher.</p>
         </section>
 
         <section class="faq-item">
-          <h3>4) Why does the calculator sometimes choose a split with lower-looking points?</h3>
-          <p>
-            Because the ranking is not based on points alone. It compares multiplier first, then points, then kicker. A lower visible number can still be the stronger full outcome.
-          </p>
+          <h3>4) Why does the calculator sometimes choose lower-looking points?</h3>
+          <p>Because ranking is not based on points alone. It compares multiplier first, then points, then kicker.</p>
         </section>
 
         <section class="faq-item">
-          <h3>5) Should I always manually test all 3/6 swaps?</h3>
-          <p>
-            You can, but it is error-prone in fast play. This calculator already checks every swap variant and returns the best legal result, which is faster and safer.
-          </p>
+          <h3>5) Should I manually test all 3/6 swaps?</h3>
+          <p>You can, but it is error-prone in fast play. This calculator already checks every swap variant and returns the strongest legal result.</p>
         </section>
 
-        <a class="cta" href="./">Open Calculator</a>
+        <a class="cta" href="%BASE_URL%">Open Calculator</a>
       </article>
 
       <p class="footer-note">Updated: February 20, 2026</p>

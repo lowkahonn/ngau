@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Ngau Example Rounds (實戰例子) | Ngau Calculator</title>
+    <title>Ngau Example Rounds | Ngau Calculator</title>
     <meta
       name="description"
-      content="Ngau example rounds with step-by-step arrangement choices, base validation, point-hand calculation, and better alternatives using 3/6 swap."
+      content="Ngau example rounds with step-by-step split decisions, base validation, point-hand calculation, and stronger alternatives using 3/6 swap."
     />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="%VITE_SITE_URL%ngau-example-rounds.html" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Ngau Example Rounds" />
     <meta
       property="og:description"
-      content="See complete Ngau rounds broken down from raw cards to final strongest arrangement."
+      content="See complete Ngau rounds broken down from raw cards to the strongest legal arrangement."
     />
     <meta property="og:url" content="%VITE_SITE_URL%ngau-example-rounds.html" />
     <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
@@ -22,35 +22,33 @@
     <meta name="twitter:title" content="Ngau Example Rounds" />
     <meta
       name="twitter:description"
-      content="Worked Ngau examples you can replay in the calculator to build decision speed."
+      content="Worked Ngau examples you can replay in the calculator to improve decision speed."
     />
     <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
-    <link rel="stylesheet" href="./content-pages.css" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": "Ngau Example Rounds (實戰例子)",
+        "headline": "Ngau Example Rounds",
         "description": "Step-by-step worked examples for Ngau hand arrangement and scoring.",
         "author": {
           "@type": "Organization",
           "name": "Ngau Calculator"
         },
         "mainEntityOfPage": "%VITE_SITE_URL%ngau-example-rounds.html",
-        "inLanguage": "zh-Hant"
+        "inLanguage": "en"
       }
     </script>
   </head>
   <body>
     <main class="shell">
-      <a class="home-link" href="./">Back to Calculator</a>
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
 
       <header class="hero">
         <p class="eyebrow">PRACTICE CASES</p>
-        <h1>Ngau Example Rounds (實戰例子)</h1>
-        <p class="lede">
-          這些例子用真實流程示範：先驗證底牌，再比較點牌，最後選出最佳結果。你可以直接把牌組輸入計算器，逐步對照理解。
-        </p>
+        <h1>Ngau Example Rounds</h1>
+        <p class="lede">These rounds show the full decision process: validate the base first, compare point cards next, and choose the strongest legal result.</p>
         <nav class="guide-nav" aria-label="Guide pages">
           <a href="how-to-play-ngau.html">How to Play</a>
           <a href="ngau-rules-explained.html">Rules</a>
@@ -61,49 +59,43 @@
       </header>
 
       <article class="panel">
-        <h2>Round 1: Straightforward Valid Split</h2>
+        <h2>Round 1: Direct Special-Hand Path</h2>
         <p><strong>Hand:</strong> AS 9 K 4 7</p>
         <ol>
-          <li>Try base: 9 + 4 + 7 = 20, valid base.</li>
-          <li>Point cards: AS + K = 牛冬菇 condition satisfied.</li>
-          <li>Result becomes a high-priority special hand.</li>
+          <li>Choose base 9 + 4 + 7 = 20, which is valid.</li>
+          <li>Point cards become AS + K.</li>
+          <li>This satisfies Niu Dong Gu conditions and produces a high-priority outcome.</li>
         </ol>
 
         <h3>Takeaway</h3>
-        <p>
-          有 AS 配 J/Q/K 時，通常值得先測試能否湊出合法底牌。只要底牌合法，牛冬菇往往會成為最有力結果。
-        </p>
+        <p>When AS appears with J/Q/K, first test whether the remaining cards can form a valid base. If yes, that route is often very strong.</p>
       </article>
 
       <article class="panel">
-        <h2>Round 2: 3/6 Swap Unlocks Better Result</h2>
+        <h2>Round 2: 3/6 Swap Unlocks Better Value</h2>
         <p><strong>Hand:</strong> 3 6 8 J K</p>
         <ol>
-          <li>Without swap, some base choices are weak or invalid.</li>
-          <li>Swap one of 3/6 states and retry base combinations.</li>
-          <li>A new valid base appears, and point cards can move to stronger output.</li>
+          <li>Evaluate base choices in original state.</li>
+          <li>Then test swapped 3/6 states.</li>
+          <li>A stronger legal split can appear only after swap evaluation.</li>
         </ol>
 
-        <p class="tip">
-          If a hand looks close but not quite legal, 3/6 swap is often the first lever to test.
-        </p>
+        <p class="tip">If a hand looks close but not valid, 3/6 swap is often the first optimization to test.</p>
       </article>
 
       <article class="panel">
-        <h2>Round 3: Pair Versus 10 Points Decision</h2>
+        <h2>Round 3: Pair Versus 10-Point Tradeoff</h2>
         <p><strong>Hand:</strong> Q Q 2 8 K</p>
         <ol>
           <li>Base 2 + 8 + K(10) = 20 is valid.</li>
-          <li>Point pair Q + Q forms 孖寶 with multiplier advantage.</li>
-          <li>Even if another split can produce 10 points, multiplier comparison may still favor pair.</li>
+          <li>Point cards Q + Q form Pair (multiplier advantage).</li>
+          <li>Even if another split makes 10 points, Pair can still rank higher due to multiplier priority.</li>
         </ol>
 
         <h3>Takeaway</h3>
-        <p>
-          不要只看「點數看起來高」。實際比較時，倍數權重很關鍵，孖寶常常能勝過看似不錯的普通點數。
-        </p>
+        <p>Do not judge strength by visible point value alone. Multiplier ranking is decisive in many close-looking hands.</p>
 
-        <a class="cta" href="./">Try These Rounds in Calculator</a>
+        <a class="cta" href="%BASE_URL%">Try These Rounds in Calculator</a>
       </article>
 
       <p class="footer-note">Updated: February 20, 2026</p>

@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Ngau Rules Explanation (牛牛規則詳解) | Ngau Calculator</title>
+    <title>Ngau Rules Explained | Ngau Calculator</title>
     <meta
       name="description"
-      content="Detailed Ngau rules explanation: valid base, point calculation, special hands (牛冬菇, 孖寶, 五張公), and tie-break logic used by the calculator."
+      content="Detailed Ngau rules explanation: valid base, point calculation, special hands, and tie-break logic used by the calculator."
     />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="%VITE_SITE_URL%ngau-rules-explained.html" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Ngau Rules Explanation (牛牛規則詳解)" />
+    <meta property="og:title" content="Ngau Rules Explained" />
     <meta
       property="og:description"
       content="Understand how Ngau hands are validated and ranked, including 10-point hands and special multipliers."
@@ -19,37 +19,37 @@
     <meta property="og:url" content="%VITE_SITE_URL%ngau-rules-explained.html" />
     <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Ngau Rules Explanation" />
+    <meta name="twitter:title" content="Ngau Rules Explained" />
     <meta
       name="twitter:description"
-      content="A practical rules reference for Ngau players, from base validity to hand ranking and scoring behavior."
+      content="A practical reference for Ngau hand validation, ranking, and scoring behavior."
     />
     <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
-    <link rel="stylesheet" href="./content-pages.css" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": "Ngau Rules Explanation (牛牛規則詳解)",
+        "headline": "Ngau Rules Explained",
         "description": "Rule breakdown for Ngau hand validation, hand ranking, and scoring logic.",
         "author": {
           "@type": "Organization",
           "name": "Ngau Calculator"
         },
         "mainEntityOfPage": "%VITE_SITE_URL%ngau-rules-explained.html",
-        "inLanguage": "zh-Hant"
+        "inLanguage": "en"
       }
     </script>
   </head>
   <body>
     <main class="shell">
-      <a class="home-link" href="./">Back to Calculator</a>
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
 
       <header class="hero">
         <p class="eyebrow">RULE REFERENCE</p>
-        <h1>Ngau Rules Explanation (牛牛規則詳解)</h1>
+        <h1>Ngau Rules Explained</h1>
         <p class="lede">
-          本頁整理本網站的判定流程，方便你理解為什麼同一手牌會得出特定結果。規則內容與計算器實作一致，適合拿來對照每一步。
+          This page summarizes the exact rule flow used in the calculator so you can understand why a hand receives a specific result.
         </p>
         <nav class="guide-nav" aria-label="Guide pages">
           <a href="how-to-play-ngau.html">How to Play</a>
@@ -63,8 +63,7 @@
       <article class="panel">
         <h2>1) Valid Arrangement Requirement</h2>
         <p>
-          5 張牌中，必須選 3 張作底牌，另外 2 張作點牌。只有當底牌數值總和可被 10 整除，這個排法才是合法排法。
-          如果沒有任何合法排法，結果就會是「找不到合法排法」。
+          From 5 cards, you must choose 3 cards as base and 2 cards as point cards. A split is valid only if the base total is divisible by 10. If no valid split exists, the hand has no legal arrangement.
         </p>
 
         <h3>Card Values</h3>
@@ -77,35 +76,32 @@
 
       <article class="panel">
         <h2>2) Point-Hand and Special Hands</h2>
-        <p>當底牌合法後，2 張點牌會按以下邏輯判定：</p>
+        <p>After a valid base is formed, point cards are evaluated with this priority logic:</p>
         <ul>
-          <li><strong>牛冬菇</strong>: AS + J/Q/K，倍數 7，點數 1</li>
-          <li><strong>孖寶</strong>: 兩張點牌牌面相同，倍數 3（點數按牌面強度）</li>
-          <li><strong>10 點</strong>: 點牌總和 % 10 = 0，倍數 2</li>
-          <li><strong>1 至 9 點</strong>: 一般點數，倍數 1</li>
-          <li><strong>五張公</strong>: 全部 5 張都是 J/Q/K，倍數 5</li>
+          <li><strong>Niu Dong Gu</strong>: AS + J/Q/K, multiplier 7, points 1</li>
+          <li><strong>Pair</strong>: point cards share the same face rank, multiplier 3</li>
+          <li><strong>10 Points</strong>: point-card sum % 10 = 0, multiplier 2</li>
+          <li><strong>1 to 9 Points</strong>: regular point outcomes, multiplier 1</li>
+          <li><strong>Five Face</strong>: all 5 cards are J/Q/K, multiplier 5</li>
         </ul>
 
-        <p class="tip">
-          牛冬菇只會在黑桃 A（AS）+ J/Q/K 直接成立。若你只有 A 而未指定花色，計算器會另外提供「A 假設排法」作參考。
-        </p>
+        <p class="tip">Direct Niu Dong Gu requires black spade Ace (AS) with J, Q, or K, plus a valid base.</p>
       </article>
 
       <article class="panel">
         <h2>3) Ranking and Tie-Break</h2>
         <p>
-          計算器會比較每個合法排法的「倍數 → 點數 → kicker」。倍數高優先，其次是點數，再看 kicker。
-          因此特殊牌型通常會壓過普通高點數。
+          The calculator compares legal outcomes by multiplier first, then points, then kicker. That is why a lower visible point value can still produce the stronger final outcome.
         </p>
 
-        <h3>Why You Might See Unexpected Results</h3>
+        <h3>Why Results Can Look Unexpected</h3>
         <ul>
-          <li>A lower visible point result can still win if it has a higher multiplier.</li>
-          <li>3/6 swap may create a stronger legal base that is not obvious at first glance.</li>
-          <li>Face-rank handling for pairs uses original face rank (not swapped value).</li>
+          <li>A special hand with higher multiplier can beat ordinary higher points.</li>
+          <li>A 3/6 swap can create a stronger legal split than the original values.</li>
+          <li>Pair comparison uses original face rank.</li>
         </ul>
 
-        <a class="cta" href="./">Test These Rules in the Calculator</a>
+        <a class="cta" href="%BASE_URL%">Test These Rules in the Calculator</a>
       </article>
 
       <p class="footer-note">Updated: February 20, 2026</p>

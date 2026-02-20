@@ -1,56 +1,55 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>How to Play Ngau (牛牛玩法) | Ngau Calculator</title>
+    <title>How to Play Ngau | Ngau Calculator</title>
     <meta
       name="description"
-      content="How to play Ngau (牛牛玩法): quick start, turn flow, card setup, base/point split, and beginner strategy. Includes bilingual guidance for new players."
+      content="How to play Ngau: quick start, round flow, card setup, base and point split, and beginner strategy for better decisions."
     />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="%VITE_SITE_URL%how-to-play-ngau.html" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="How to Play Ngau (牛牛玩法)" />
+    <meta property="og:title" content="How to Play Ngau" />
     <meta
       property="og:description"
-      content="Learn the full Ngau round flow, what to do with 5 cards, and how to form the strongest hand under Ngau rules."
+      content="Learn the full Ngau round flow, what to do with 5 cards, and how to form the strongest legal hand."
     />
     <meta property="og:url" content="%VITE_SITE_URL%how-to-play-ngau.html" />
     <meta property="og:image" content="%VITE_SITE_URL%og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="How to Play Ngau (牛牛玩法)" />
+    <meta name="twitter:title" content="How to Play Ngau" />
     <meta
       name="twitter:description"
-      content="A practical Ngau beginner guide: setup, flow, scoring basics, and mistakes to avoid."
+      content="A practical Ngau beginner guide: setup, flow, scoring basics, and common mistakes."
     />
     <meta name="twitter:image" content="%VITE_SITE_URL%og-image.svg" />
-    <link rel="stylesheet" href="./content-pages.css" />
+    <link rel="stylesheet" href="%BASE_URL%content-pages.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": "How to Play Ngau (牛牛玩法)",
+        "headline": "How to Play Ngau",
         "description": "Beginner guide to Ngau gameplay flow, card arrangement, and scoring basics.",
         "author": {
           "@type": "Organization",
           "name": "Ngau Calculator"
         },
         "mainEntityOfPage": "%VITE_SITE_URL%how-to-play-ngau.html",
-        "inLanguage": "zh-Hant"
+        "inLanguage": "en"
       }
     </script>
   </head>
   <body>
     <main class="shell">
-      <a class="home-link" href="./">Back to Calculator</a>
+      <a class="home-link" href="%BASE_URL%">Back to Calculator</a>
 
       <header class="hero">
         <p class="eyebrow">NGAU LEARNING GUIDE</p>
-        <h1>How to Play Ngau (牛牛玩法)</h1>
+        <h1>How to Play Ngau</h1>
         <p class="lede">
-          Ngau（牛牛）每局會拿到 5 張牌。核心目標是把牌分成「下排 3 張底牌」和「上排 2 張點牌」，先確保底牌總和可被 10 整除，再追求最高牌型。
-          This page is a quick bilingual walkthrough so new players can start correctly in minutes.
+          In each round of Ngau, you receive 5 cards. Your goal is to split them into 3 base cards and 2 point cards. First, make sure the base total is divisible by 10. Then maximize the point-hand strength.
         </p>
         <nav class="guide-nav" aria-label="Guide pages">
           <a class="active" href="how-to-play-ngau.html">How to Play</a>
@@ -64,45 +63,39 @@
       <article class="panel">
         <h2>1) Basic Round Flow</h2>
         <ol>
-          <li>Each player gets 5 cards.</li>
-          <li>Choose 3 cards as the base (底牌) and 2 cards as point cards (點牌).</li>
-          <li>The base must be divisible by 10. If not, the split is invalid.</li>
-          <li>Once the base is valid, evaluate the 2 point cards to determine hand strength.</li>
+          <li>Each player receives 5 cards.</li>
+          <li>Pick 3 cards as the base and 2 cards as point cards.</li>
+          <li>The base total must be divisible by 10. Otherwise the split is invalid.</li>
+          <li>After a valid base is formed, evaluate the 2 point cards.</li>
         </ol>
 
         <h3>Quick Input Format</h3>
-        <p>
-          在本網站計算器，你可以輸入類似 <strong>AS 3 6 8 K</strong>。A 可帶花色，例如 AS（黑桃 A），其餘牌可直接輸入牌面。
-          10 可輸入成 10。
-        </p>
+        <p>In this calculator, you can input cards like <strong>AS 3 6 8 K</strong>. You can also type 10 as 10.</p>
 
-        <h3>New Player Priorities</h3>
+        <h3>Beginner Priorities</h3>
         <ol>
-          <li>First priority: make a valid base (sum divisible by 10).</li>
+          <li>First priority: form a valid base.</li>
           <li>Second priority: maximize the point-hand result.</li>
-          <li>Third priority: consider special outcomes such as 孖寶 and 牛冬菇.</li>
+          <li>Third priority: check for special outcomes such as Pair and Niu Dong Gu.</li>
         </ol>
 
-        <p class="tip">
-          Tip: If you struggle to see valid base combinations quickly, use the calculator to train your pattern recognition. After 20 to 30 rounds, speed improves a lot.
-        </p>
+        <p class="tip">Tip: If valid base combinations are hard to spot quickly, practice with the calculator for several rounds. Pattern recognition improves fast.</p>
       </article>
 
       <article class="panel">
         <h2>2) What Makes a Strong Result</h2>
         <p>
-          本計算器會依照牌型倍數、點數與 kicker 做比較。一般來說，特殊牌型（例如 牛冬菇、五張公）會優先於普通點數。
-          If two outcomes look close, the app always picks the stronger legal arrangement automatically.
+          The calculator compares outcomes by multiplier, then points, then kicker. This means special hands can rank above ordinary high points.
         </p>
 
-        <h3>Common Beginner Mistakes</h3>
+        <h3>Common Mistakes</h3>
         <ul>
-          <li>Forgetting that base must be valid before point cards matter.</li>
-          <li>Ignoring the 3/6 swap possibility when searching for better splits.</li>
-          <li>Treating all Ace cards as special; only black spade Ace (AS) triggers 牛冬菇 directly.</li>
+          <li>Checking point cards before confirming a valid base.</li>
+          <li>Ignoring 3/6 swap options.</li>
+          <li>Assuming all Ace cards trigger special rules automatically.</li>
         </ul>
 
-        <a class="cta" href="./">Try the Ngau Calculator</a>
+        <a class="cta" href="%BASE_URL%">Try the Ngau Calculator</a>
       </article>
 
       <p class="footer-note">Updated: February 20, 2026</p>
