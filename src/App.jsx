@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toPng } from "html-to-image";
 import AdSenseSlot from "./components/AdSenseSlot";
 import PokerCard from "./components/PokerCard";
 import ResultConfetti from "./components/ResultConfetti";
@@ -36,6 +37,24 @@ const I18N = {
     bestResult: "最佳結果",
     noResultTitle: "沒有點",
     noResultBody: "目前這 5 張牌沒有點。",
+    sharePanelTitle: "分享這手牌",
+    sharePanelBody: "產生高質感牌局圖，一鍵分享到社交平台。",
+    shareSocialHint: "分享到社交平台",
+    shareWhatsApp: "WhatsApp",
+    shareX: "X",
+    shareFacebook: "Facebook",
+    shareTelegram: "Telegram",
+    shareInstagram: "Instagram",
+    shareAction: "系統分享",
+    shareDownloadImage: "下載圖片",
+    shareDone: "已開啟分享",
+    shareDownloaded: "圖片已下載，可直接上傳到社交平台。",
+    shareFailed: "分享失敗，請稍後再試。",
+    sharePreparing: "準備分享預覽中...",
+    shareRendering: "產生分享圖中...",
+    shareCards: (cards) => `牌局：${cards}`,
+    shareResult: (summary) => `結果：${summary}`,
+    sharePreviewAlt: "牌局分享圖預覽",
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
     allCardsRow: "原始牌：5 張",
@@ -85,6 +104,24 @@ const I18N = {
     bestResult: "最佳结果",
     noResultTitle: "没有点",
     noResultBody: "当前这 5 张牌没有点。",
+    sharePanelTitle: "分享这手牌",
+    sharePanelBody: "生成高质感牌局图，一键分享到社交平台。",
+    shareSocialHint: "分享到社交平台",
+    shareWhatsApp: "WhatsApp",
+    shareX: "X",
+    shareFacebook: "Facebook",
+    shareTelegram: "Telegram",
+    shareInstagram: "Instagram",
+    shareAction: "系统分享",
+    shareDownloadImage: "下载图片",
+    shareDone: "已打开分享",
+    shareDownloaded: "图片已下载，可直接上传到社交平台。",
+    shareFailed: "分享失败，请稍后再试。",
+    sharePreparing: "正在准备分享预览...",
+    shareRendering: "正在生成分享图...",
+    shareCards: (cards) => `牌局：${cards}`,
+    shareResult: (summary) => `结果：${summary}`,
+    sharePreviewAlt: "牌局分享图预览",
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
     allCardsRow: "原始牌：5 张",
@@ -134,6 +171,24 @@ const I18N = {
     bestResult: "Best Result",
     noResultTitle: "No points",
     noResultBody: "These 5 cards have no points.",
+    sharePanelTitle: "Share This Hand",
+    sharePanelBody: "Generate a polished hand image and share it to social media.",
+    shareSocialHint: "Share to social media",
+    shareWhatsApp: "WhatsApp",
+    shareX: "X",
+    shareFacebook: "Facebook",
+    shareTelegram: "Telegram",
+    shareInstagram: "Instagram",
+    shareAction: "System Share",
+    shareDownloadImage: "Download Image",
+    shareDone: "Share opened",
+    shareDownloaded: "Image downloaded. Upload it to your social app.",
+    shareFailed: "Share failed. Please try again.",
+    sharePreparing: "Preparing share preview...",
+    shareRendering: "Rendering share image...",
+    shareCards: (cards) => `Cards: ${cards}`,
+    shareResult: (summary) => `Result: ${summary}`,
+    sharePreviewAlt: "Share hand preview image",
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
     allCardsRow: "Input cards: 5",
@@ -222,6 +277,27 @@ function formatHandSummary(best, t, language) {
   return t.handLine(handName, formatDisplayPoints(best));
 }
 
+function dataUrlToBlob(dataUrl) {
+  const [meta, body] = dataUrl.split(",");
+  const mime = meta.match(/data:(.*?);base64/)?.[1] ?? "image/png";
+  const decoded = atob(body);
+  const bytes = new Uint8Array(decoded.length);
+  for (let index = 0; index < decoded.length; index += 1) {
+    bytes[index] = decoded.charCodeAt(index);
+  }
+  return new Blob([bytes], { type: mime });
+}
+
+function downloadDataUrl(dataUrl, fileName) {
+  if (!dataUrl || typeof document === "undefined") return;
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight }) {
   return (
     <section className={isLight ? "rounded-2xl border border-slate-300 bg-slate-100 p-3" : "rounded-2xl border border-white/15 bg-black/20 p-3"}>
@@ -292,6 +368,315 @@ function ResultPanel({ result, t, language, isLight }) {
   );
 }
 
+function ShareImageStage({ meta, language, appTitle }) {
+  const host = typeof window !== "undefined" ? window.location.host : "ngau";
+  const shareTitle = language === "zh-Hant" ? "牛牛分享牌局" : language === "zh-Hans" ? "牛牛分享牌局" : "Shared Hand";
+  return (
+    <article className="relative h-[625px] w-[500px] overflow-hidden rounded-[30px] border border-white/25 bg-felt-pattern p-8 text-white">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-40 w-40 rounded-full bg-amber-300/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 -left-16 h-44 w-44 rounded-full bg-emerald-300/25 blur-3xl" />
+      <div className="relative z-10 flex h-full flex-col">
+        <div>
+          <h3 className="font-title text-3xl tracking-[0.05em]">{appTitle}</h3>
+          <div className="mt-1 flex items-center justify-between gap-2">
+            <p className="text-base text-emerald-100/90">{shareTitle}</p>
+            <p className="text-sm tracking-[0.08em] text-slate-200/85">{meta.timestamp}</p>
+          </div>
+          <p className="mt-1 text-sm tracking-[0.06em] text-emerald-100/75">{host}</p>
+        </div>
+
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <div className="flex justify-center gap-3">
+            {meta.topCards.map((card, index) => (
+              <PokerCard key={`share-top-${card}-${index}`} value={card} />
+            ))}
+          </div>
+          <div className="mt-4 flex justify-center gap-3">
+            {meta.baseCards.map((card, index) => (
+              <PokerCard key={`share-base-${card}-${index}`} value={card} />
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-amber-200/35 bg-black/30 px-4 py-3">
+          <p className="text-base font-semibold text-slate-100">{meta.summary}</p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function IconBase({ children }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-none stroke-current">
+      {children}
+    </svg>
+  );
+}
+
+function IconInstagram() {
+  return (
+    <IconBase>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" strokeWidth="2" />
+      <circle cx="12" cy="12" r="4" strokeWidth="2" />
+      <circle cx="17.3" cy="6.8" r="1.2" fill="currentColor" stroke="none" />
+    </IconBase>
+  );
+}
+
+function IconWhatsApp() {
+  return (
+    <svg viewBox="0 0 512 512" aria-label="WhatsApp" role="img" className="h-7 w-7">
+      <rect width="512" height="512" rx="15%" fill="#25d366" />
+      <path fill="#25d366" stroke="#ffffff" strokeWidth="26" d="M123 393l14-65a138 138 0 1150 47z" />
+      <path fill="#ffffff" d="M308 273c-3-2-6-3-9 1l-12 16c-3 2-5 3-9 1-15-8-36-17-54-47-1-4 1-6 3-8l9-14c2-2 1-4 0-6l-12-29c-3-8-6-7-9-7h-8c-2 0-6 1-10 5-22 22-13 53 3 73 3 4 23 40 66 59 32 14 39 12 48 10 11-1 22-10 27-19 1-3 6-16 2-18" />
+    </svg>
+  );
+}
+
+function IconX() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-current">
+      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932 6.064-6.932Zm-1.297 19.28h2.039L6.486 3.24H4.298Z" />
+    </svg>
+  );
+}
+
+function IconFacebook() {
+  return (
+    <IconBase>
+      <path d="M13.8 8.5H16V5.2h-2.2c-2.6 0-3.9 1.6-3.9 4v2H7.6v3.1h2.3V20h3.3v-5.7h2.4l.4-3.1h-2.8v-1.6c0-.7.3-1.1 1-1.1z" fill="currentColor" stroke="none" />
+    </IconBase>
+  );
+}
+
+function IconTelegram() {
+  return (
+    <IconBase>
+      <path d="M20.7 4.1 3.4 10.6c-.9.3-.8 1.6.2 1.8l4.5 1.2 1.5 4.5c.3.9 1.5 1 1.9.2l2.2-4.3 4.8-8.7c.5-.9-.3-1.9-1.2-1.6z" strokeWidth="1.2" />
+      <path d="m8.1 13.6 9.5-7.2-7.4 8.5" strokeWidth="1.2" />
+    </IconBase>
+  );
+}
+
+function IconShare() {
+  return (
+    <IconBase>
+      <circle cx="18" cy="5.2" r="2.2" strokeWidth="1.8" />
+      <circle cx="6" cy="12" r="2.2" strokeWidth="1.8" />
+      <circle cx="18" cy="18.8" r="2.2" strokeWidth="1.8" />
+      <path d="M8.1 11 15.9 6.2M8.1 13l7.8 4.8" strokeWidth="1.8" />
+    </IconBase>
+  );
+}
+
+function IconDownload() {
+  return (
+    <IconBase>
+      <path d="M12 4v10" strokeWidth="2" />
+      <path d="m7.8 10.8 4.2 4.2 4.2-4.2" strokeWidth="2" />
+      <path d="M5 19h14" strokeWidth="2" />
+    </IconBase>
+  );
+}
+
+function ShareHandPanel({ result, t, language, isLight }) {
+  const shareStageRef = useRef(null);
+  const [feedback, setFeedback] = useState("");
+  const [isSharing, setIsSharing] = useState(false);
+  const [isRenderingPreview, setIsRenderingPreview] = useState(false);
+  const [shareImageDataUrl, setShareImageDataUrl] = useState("");
+
+  const shareMeta = useMemo(() => {
+    if (!result?.cards || result.cards.length !== 5) return null;
+    const cards = formatCards(result.cards, { useFace: true });
+    const topCards =
+      result?.best?.pointCards?.length === 2 && result?.best?.baseCards?.length === 3 ? formatCards(result.best.pointCards, { useFace: true }) : cards.slice(0, 2);
+    const baseCards =
+      result?.best?.pointCards?.length === 2 && result?.best?.baseCards?.length === 3 ? formatCards(result.best.baseCards, { useFace: true }) : cards.slice(2, 5);
+    const cardsText = cards.join(" ");
+    const summary = result.best ? formatHandSummary(result.best, t, language) : t.noResultTitle;
+    const text = `${t.shareCards(cardsText)}\n${t.shareResult(summary)}`;
+    return {
+      text,
+      cards,
+      topCards,
+      baseCards,
+      summary,
+      timestamp: new Date().toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    };
+  }, [result, t, language]);
+
+  const renderShareImage = useCallback(async () => {
+    if (!shareMeta || !shareStageRef.current) return "";
+    try {
+      setIsRenderingPreview(true);
+      const dataUrl = await toPng(shareStageRef.current, {
+        cacheBust: true,
+        pixelRatio: 1.4
+      });
+      setShareImageDataUrl(dataUrl);
+      return dataUrl;
+    } catch {
+      setFeedback(t.shareFailed);
+      return "";
+    } finally {
+      setIsRenderingPreview(false);
+    }
+  }, [shareMeta, t.shareFailed]);
+
+  useEffect(() => {
+    setFeedback("");
+    setIsSharing(false);
+    setShareImageDataUrl("");
+    if (shareMeta) {
+      void renderShareImage();
+    }
+  }, [shareMeta, renderShareImage]);
+
+  const socialButtons = useMemo(
+    () => [
+      { key: "instagram", label: t.shareInstagram, Icon: IconInstagram, tone: "bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white" },
+      { key: "whatsapp", label: t.shareWhatsApp, Icon: IconWhatsApp, tone: "bg-[#25D366] text-white" },
+      { key: "x", label: t.shareX, Icon: IconX, tone: "bg-black text-white" }
+    ],
+    [t]
+  );
+
+  async function ensureShareImage() {
+    if (shareImageDataUrl) return shareImageDataUrl;
+    return renderShareImage();
+  }
+
+  async function shareImage() {
+    if (!shareMeta) return;
+    if (typeof navigator === "undefined") {
+      setFeedback(t.shareFailed);
+      return;
+    }
+    const imageDataUrl = await ensureShareImage();
+    if (!imageDataUrl) return;
+
+    const fileName = `ngau-hand-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
+    const blob = dataUrlToBlob(imageDataUrl);
+    const imageFile = new File([blob], fileName, { type: "image/png" });
+    const canShareFile = typeof navigator.canShare !== "function" || navigator.canShare({ files: [imageFile] });
+
+    try {
+      setIsSharing(true);
+      if (navigator.share && canShareFile) {
+        await navigator.share({
+          title: t.sharePanelTitle,
+          text: shareMeta.text,
+          files: [imageFile]
+        });
+        setFeedback(t.shareDone);
+        return;
+      }
+      downloadDataUrl(imageDataUrl, fileName);
+      setFeedback(t.shareDownloaded);
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      setFeedback(t.shareFailed);
+    } finally {
+      setIsSharing(false);
+    }
+  }
+
+  async function downloadImage() {
+    if (!shareMeta) return;
+    const imageDataUrl = await ensureShareImage();
+    if (!imageDataUrl) return;
+    const fileName = `ngau-hand-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
+    downloadDataUrl(imageDataUrl, fileName);
+    setFeedback(t.shareDownloaded);
+  }
+
+  return (
+    <section
+      className={
+        isLight
+          ? "relative mt-4 overflow-hidden rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-orange-50 to-emerald-50 p-4 shadow-xl"
+          : "relative mt-4 overflow-hidden rounded-3xl border border-emerald-300/30 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 p-4 shadow-panel"
+      }
+    >
+      <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-amber-300/25 blur-2xl" />
+      <div className="pointer-events-none absolute -bottom-12 -left-10 h-28 w-28 rounded-full bg-emerald-300/20 blur-2xl" />
+      <div className="relative z-10">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className={isLight ? "font-title text-lg text-slate-900" : "font-title text-lg text-emerald-50"}>{t.sharePanelTitle}</h3>
+          <span className={isLight ? "rounded-full bg-white/70 px-2 py-0.5 text-xs font-semibold text-slate-700" : "rounded-full bg-white/10 px-2 py-0.5 text-xs font-semibold text-emerald-100/90"}>
+            PNG
+          </span>
+        </div>
+        <p className={isLight ? "mt-1 text-sm text-slate-700" : "mt-1 text-sm text-emerald-100/85"}>{t.sharePanelBody}</p>
+
+        {shareImageDataUrl ? (
+          <div className={isLight ? "mt-3 overflow-hidden rounded-2xl border border-slate-300 bg-white p-1" : "mt-3 overflow-hidden rounded-2xl border border-white/20 bg-black/20 p-1"}>
+            <img src={shareImageDataUrl} alt={t.sharePreviewAlt} className="mx-auto max-h-72 w-full rounded-xl object-contain" />
+          </div>
+        ) : (
+          <div className={isLight ? "mt-3 flex h-44 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-xs text-slate-500" : "mt-3 flex h-44 items-center justify-center rounded-2xl border border-dashed border-white/20 bg-black/20 text-xs text-emerald-100/60"}>
+            {isRenderingPreview ? t.shareRendering : t.sharePreparing}
+          </div>
+        )}
+
+        <p className={isLight ? "mt-3 text-xs tracking-[0.14em] text-slate-500" : "mt-3 text-xs tracking-[0.14em] text-emerald-100/65"}>{t.shareSocialHint}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          {socialButtons.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={shareImage}
+              disabled={isSharing || isRenderingPreview || !shareMeta}
+              aria-label={item.label}
+              title={item.label}
+              className={`flex h-11 w-11 items-center justify-center rounded-2xl shadow-md shadow-black/20 transition active:scale-[0.97] disabled:opacity-45 ${item.tone}`}
+            >
+              <item.Icon />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={shareImage}
+            disabled={isSharing || isRenderingPreview || !shareMeta}
+            aria-label={t.shareAction}
+            title={t.shareAction}
+            className={isLight ? "flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-700 shadow-md shadow-slate-400/25 active:scale-[0.97] disabled:opacity-45" : "flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/30 text-emerald-100 shadow-md shadow-black/30 active:scale-[0.97] disabled:opacity-45"}
+          >
+            <IconShare />
+          </button>
+          <button
+            type="button"
+            onClick={downloadImage}
+            disabled={isRenderingPreview || !shareMeta}
+            aria-label={t.shareDownloadImage}
+            title={t.shareDownloadImage}
+            className={isLight ? "flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-700 shadow-md shadow-slate-400/25 active:scale-[0.97] disabled:opacity-45" : "flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/30 text-emerald-100 shadow-md shadow-black/30 active:scale-[0.97] disabled:opacity-45"}
+          >
+            <IconDownload />
+          </button>
+        </div>
+
+        {feedback ? <p className={isLight ? "mt-2 text-xs font-semibold text-emerald-700" : "mt-2 text-xs font-semibold text-emerald-200"}>{feedback}</p> : null}
+      </div>
+      {shareMeta ? (
+        <div className="pointer-events-none fixed left-[-200vw] top-0 opacity-0" aria-hidden="true">
+          <div ref={shareStageRef} className="inline-flex bg-transparent p-4">
+            <ShareImageStage meta={shareMeta} language={language} appTitle={t.title} />
+          </div>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 function ResultDialog({ open, onClose, onReset, result, t, language, isLight }) {
   if (!open) return null;
 
@@ -326,6 +711,7 @@ function ResultDialog({ open, onClose, onReset, result, t, language, isLight }) 
 
           <div className="max-h-[75vh] overflow-y-auto pr-1">
             <ResultPanel result={result} t={t} language={language} isLight={isLight} />
+            <ShareHandPanel result={result} t={t} language={language} isLight={isLight} />
           </div>
         </div>
       </section>
