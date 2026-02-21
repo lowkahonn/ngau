@@ -34,8 +34,8 @@ const I18N = {
     resetResult: "重新選牌",
     resultTitle: "計算結果",
     bestResult: "最佳結果",
-    noResultTitle: "找不到合法排法",
-    noResultBody: "目前這 5 張牌無法排出符合底牌條件（可整除 10）的組合。",
+    noResultTitle: "沒有點",
+    noResultBody: "目前這 5 張牌沒有點。",
     pointRow: "上排：點牌 2 張",
     baseRow: "下排：底牌 3 張",
     allCardsRow: "原始牌：5 張",
@@ -50,7 +50,24 @@ const I18N = {
     guideRules: "規則詳解",
     guideSwap: "3/6 互換說明",
     guideExamples: "實戰例子",
-    guideFaq: "FAQ"
+    guideFaq: "FAQ",
+    historyTitle: "最近牌局",
+    historyEmpty: "尚未有計算紀錄。",
+    historyArchiveTitle: "全部歷史紀錄",
+    historyArchiveEmpty: "尚未有歷史紀錄。",
+    historyStatsTitle: "統計",
+    historyTotalHands: (count) => `總手數：${count}`,
+    historySessionHands: (count) => `本次 Session：${count}`,
+    historyTypeCounts: "牌型次數",
+    historyBiggestHands: "最大牌型",
+    historyNoBiggest: "暫無紀錄",
+    historyDay: (dayKey) => `日期：${dayKey}`,
+    historySession: (sessionId) => `Session：${sessionId}`,
+    historyAt: (time) => `時間：${time}`,
+    historyClear: "清空歷史",
+    historyLoad: "載入這手",
+    historyNoResult: "沒有點",
+    historyViewPage: "歷史統計"
   },
   "zh-Hans": {
     title: "Ngau 计算器",
@@ -66,8 +83,8 @@ const I18N = {
     resetResult: "重新选牌",
     resultTitle: "计算结果",
     bestResult: "最佳结果",
-    noResultTitle: "找不到合法排法",
-    noResultBody: "当前这 5 张牌无法排出符合底牌条件（可整除 10）的组合。",
+    noResultTitle: "没有点",
+    noResultBody: "当前这 5 张牌没有点。",
     pointRow: "上排：点牌 2 张",
     baseRow: "下排：底牌 3 张",
     allCardsRow: "原始牌：5 张",
@@ -82,7 +99,24 @@ const I18N = {
     guideRules: "规则详解",
     guideSwap: "3/6 互换说明",
     guideExamples: "实战例子",
-    guideFaq: "FAQ"
+    guideFaq: "FAQ",
+    historyTitle: "最近牌局",
+    historyEmpty: "尚未有计算记录。",
+    historyArchiveTitle: "全部历史记录",
+    historyArchiveEmpty: "尚未有历史记录。",
+    historyStatsTitle: "统计",
+    historyTotalHands: (count) => `总手数：${count}`,
+    historySessionHands: (count) => `本次 Session：${count}`,
+    historyTypeCounts: "牌型次数",
+    historyBiggestHands: "最大牌型",
+    historyNoBiggest: "暂无记录",
+    historyDay: (dayKey) => `日期：${dayKey}`,
+    historySession: (sessionId) => `Session：${sessionId}`,
+    historyAt: (time) => `时间：${time}`,
+    historyClear: "清空历史",
+    historyLoad: "载入这手",
+    historyNoResult: "没有点",
+    historyViewPage: "历史统计"
   },
   en: {
     title: "Ngau Calculator",
@@ -98,8 +132,8 @@ const I18N = {
     resetResult: "New Hand",
     resultTitle: "Result",
     bestResult: "Best Result",
-    noResultTitle: "No valid arrangement",
-    noResultBody: "These 5 cards cannot form a valid base that is divisible by 10.",
+    noResultTitle: "No points",
+    noResultBody: "These 5 cards have no points.",
     pointRow: "Top row: 2 point cards",
     baseRow: "Bottom row: 3 base cards",
     allCardsRow: "Input cards: 5",
@@ -114,7 +148,24 @@ const I18N = {
     guideRules: "Rules explanation",
     guideSwap: "3/6 explanation",
     guideExamples: "Example rounds",
-    guideFaq: "FAQ"
+    guideFaq: "FAQ",
+    historyTitle: "Recent Hands",
+    historyEmpty: "No history yet.",
+    historyArchiveTitle: "All History",
+    historyArchiveEmpty: "No persisted history yet.",
+    historyStatsTitle: "Stats",
+    historyTotalHands: (count) => `Total hands: ${count}`,
+    historySessionHands: (count) => `This session: ${count}`,
+    historyTypeCounts: "Hand Type Counts",
+    historyBiggestHands: "Biggest Hands",
+    historyNoBiggest: "No records",
+    historyDay: (dayKey) => `Day: ${dayKey}`,
+    historySession: (sessionId) => `Session: ${sessionId}`,
+    historyAt: (time) => `Time: ${time}`,
+    historyClear: "Clear all",
+    historyLoad: "Load this hand",
+    historyNoResult: "No points",
+    historyViewPage: "History & Stats"
   }
 };
 
@@ -161,6 +212,14 @@ function formatDisplayPoints(best) {
     if (best.points === 13) return "K";
   }
   return best.points;
+}
+
+function formatHandSummary(best, t, language) {
+  const handName = localizeHandName(best.name, language);
+  if (best.name === "牛冬菇" || best.name === "五張公" || /^\d+點$/.test(best.name)) {
+    return t.handTypeOnly(handName);
+  }
+  return t.handLine(handName, formatDisplayPoints(best));
 }
 
 function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight }) {
@@ -220,16 +279,12 @@ function ResultPanel({ result, t, language, isLight }) {
         {best.name === "五張公" ? (
           <div className="mt-3 space-y-3">
             <AllCardsRow cards={allCards} label={t.allCardsRow} isLight={isLight} />
-            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{t.handTypeOnly(localizeHandName("五張公", language))}</p>
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{formatHandSummary(best, t, language)}</p>
           </div>
         ) : (
           <div className="mt-3 space-y-3">
             <ArrangementRows pointCards={pointCards} baseCards={baseCards} pointLabel={t.pointRow} baseLabel={t.baseRow} isLight={isLight} />
-            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>
-              {best.name === "牛冬菇"
-                ? t.handTypeOnly(localizeHandName(best.name, language))
-                : t.handLine(localizeHandName(best.name, language), formatDisplayPoints(best))}
-            </p>
+            <p className={isLight ? "text-sm text-slate-800" : "text-sm text-emerald-50"}>{formatHandSummary(best, t, language)}</p>
           </div>
         )}
       </article>
@@ -377,6 +432,51 @@ function PickerPanel({ pickedCards, addPickedCard, removePickedCard, clear, anal
   );
 }
 
+function HistoryPanel({ history, t, language, isLight, loadHistoryHand }) {
+  return (
+    <section className={isLight ? "space-y-3 rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "space-y-3 rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className={isLight ? "font-title text-xl text-slate-900" : "font-title text-xl text-emerald-50"}>{t.historyTitle}</h2>
+        <a
+          href="./history.html"
+          className={isLight ? "rounded-xl border border-slate-300 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700" : "rounded-xl border border-white/20 bg-black/25 px-3 py-1 text-xs font-semibold text-emerald-100"}
+        >
+          {t.historyViewPage}
+        </a>
+      </div>
+
+      {history.length === 0 ? (
+        <p className={isLight ? "text-sm text-slate-600" : "text-sm text-emerald-100/75"}>{t.historyEmpty}</p>
+      ) : (
+        <div className="max-h-[22rem] space-y-2 overflow-y-auto pr-1">
+          {history.map((entry, index) => {
+            const summary = entry.best ? formatHandSummary(entry.best, t, language) : t.historyNoResult;
+            return (
+              <button
+                key={entry.id}
+                type="button"
+                onClick={() => loadHistoryHand(entry.cards)}
+                className={isLight ? "w-full rounded-2xl border border-slate-300 bg-slate-50 p-2 text-left" : "w-full rounded-2xl border border-white/20 bg-black/25 p-2 text-left"}
+              >
+                <div className="flex items-center justify-between">
+                  <span className={isLight ? "text-xs tracking-[0.14em] text-slate-500" : "text-xs tracking-[0.14em] text-emerald-100/70"}>#{index + 1}</span>
+                  <span className={isLight ? "text-xs font-semibold text-emerald-700" : "text-xs font-semibold text-emerald-200"}>{t.historyLoad}</span>
+                </div>
+                <div className="mt-2 flex justify-center gap-1">
+                  {entry.cards.map((card, cardIndex) => (
+                    <PokerCard key={`${entry.id}-${card}-${cardIndex}`} value={card} size="tiny" />
+                  ))}
+                </div>
+                <p className={isLight ? "mt-2 text-xs text-slate-700" : "mt-2 text-xs text-emerald-100/85"}>{summary}</p>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function RulesContent({ t, isLight }) {
   return (
     <section className={isLight ? "space-y-4 rounded-3xl border border-slate-300 bg-white p-4 shadow-xl" : "space-y-4 rounded-3xl border border-white/20 bg-black/30 p-4 shadow-panel backdrop-blur-md"}>
@@ -452,6 +552,7 @@ export default function App() {
     error,
     result,
     pickedCards,
+    history,
     language,
     theme,
     setLanguage,
@@ -460,6 +561,8 @@ export default function App() {
     removePickedCard,
     analyze,
     clear,
+    initializeHistory,
+    loadHistoryHand,
     isResultDialogOpen,
     closeResultDialog
   } = useGnauStore();
@@ -470,6 +573,11 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute("lang", language);
   }, [language]);
+
+  useEffect(() => {
+    initializeHistory();
+  }, [initializeHistory]);
+
   const canAnalyze = pickedCards.length === 5;
 
   return (
@@ -498,6 +606,7 @@ export default function App() {
           {error && <p className={isLight ? "mt-3 rounded-xl border border-red-300 bg-red-50 p-2 text-sm text-red-700" : "mt-3 rounded-xl border border-red-300/40 bg-red-500/10 p-2 text-sm text-red-100"}>{error}</p>}
         </section>
 
+        <HistoryPanel history={history} t={t} language={language} isLight={isLight} loadHistoryHand={loadHistoryHand} />
         <RulesContent t={t} isLight={isLight} />
         <GuidePages t={t} language={language} isLight={isLight} />
         <AdSenseSlot isLight={isLight} />

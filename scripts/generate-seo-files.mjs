@@ -25,6 +25,7 @@ const siteUrl =
 const today = new Date().toISOString().slice(0, 10);
 const sitemapPages = [
   { path: "", changefreq: "weekly", priority: "1.0" },
+  { path: "history.html", changefreq: "weekly", priority: "0.7" },
   { path: "how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },
   { path: "zh-hant/how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },
   { path: "zh-hans/how-to-play-ngau.html", changefreq: "weekly", priority: "0.9" },

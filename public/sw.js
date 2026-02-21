@@ -1,9 +1,10 @@
-const PRECACHE = "ngau-precache-v1";
-const RUNTIME = "ngau-runtime-v1";
+const PRECACHE = "ngau-precache-v2";
+const RUNTIME = "ngau-runtime-v2";
 
 const PRECACHE_URLS = [
   "./",
   "./index.html",
+  "./history.html",
   "./site.webmanifest",
   "./favicon.svg",
   "./og-image.svg",

@@ -7,6 +7,7 @@ const rootDir = dirname(fileURLToPath(import.meta.url));
 
 const htmlEntries = [
   "index.html",
+  "history.html",
   "how-to-play-ngau.html",
   "zh-hant/how-to-play-ngau.html",
   "zh-hans/how-to-play-ngau.html",
