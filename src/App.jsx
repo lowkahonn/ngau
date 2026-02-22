@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { toPng } from "html-to-image";
 import AdSenseSlot from "./components/AdSenseSlot";
 import PokerCard from "./components/PokerCard";
 import ResultConfetti from "./components/ResultConfetti";
-import { formatCards } from "./lib/gnau";
+import { formatCards, suitText } from "./lib/gnau";
 import { useGnauStore } from "./store/useGnauStore";
 
 const RANK_OPTIONS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -19,6 +18,13 @@ const LANGUAGE_OPTIONS = [
   { value: "zh-Hans", label: "简中" },
   { value: "en", label: "EN" }
 ];
+
+const SHARE_PANEL_WIDTH = 500;
+const SHARE_PANEL_HEIGHT = 625;
+const SHARE_CAPTURE_MARGIN = 16;
+const SHARE_EXPORT_SCALE = 1.4;
+const SHARE_CANVAS_WIDTH = Math.round((SHARE_PANEL_WIDTH + SHARE_CAPTURE_MARGIN * 2) * SHARE_EXPORT_SCALE);
+const SHARE_CANVAS_HEIGHT = Math.round((SHARE_PANEL_HEIGHT + SHARE_CAPTURE_MARGIN * 2) * SHARE_EXPORT_SCALE);
 
 const I18N = {
   "zh-Hant": {
@@ -46,7 +52,7 @@ const I18N = {
     shareTelegram: "Telegram",
     shareInstagram: "Instagram",
     shareAction: "系統分享",
-    shareDownloadImage: "下載圖片",
+    shareDownloadImage: "儲存相片",
     shareDone: "已開啟分享",
     shareDownloaded: "圖片已下載，可直接上傳到社交平台。",
     shareFailed: "分享失敗，請稍後再試。",
@@ -113,7 +119,7 @@ const I18N = {
     shareTelegram: "Telegram",
     shareInstagram: "Instagram",
     shareAction: "系统分享",
-    shareDownloadImage: "下载图片",
+    shareDownloadImage: "保存照片",
     shareDone: "已打开分享",
     shareDownloaded: "图片已下载，可直接上传到社交平台。",
     shareFailed: "分享失败，请稍后再试。",
@@ -180,7 +186,7 @@ const I18N = {
     shareTelegram: "Telegram",
     shareInstagram: "Instagram",
     shareAction: "System Share",
-    shareDownloadImage: "Download Image",
+    shareDownloadImage: "Save Photo",
     shareDone: "Share opened",
     shareDownloaded: "Image downloaded. Upload it to your social app.",
     shareFailed: "Share failed. Please try again.",
@@ -277,25 +283,316 @@ function formatHandSummary(best, t, language) {
   return t.handLine(handName, formatDisplayPoints(best));
 }
 
-function dataUrlToBlob(dataUrl) {
-  const [meta, body] = dataUrl.split(",");
-  const mime = meta.match(/data:(.*?);base64/)?.[1] ?? "image/png";
-  const decoded = atob(body);
-  const bytes = new Uint8Array(decoded.length);
-  for (let index = 0; index < decoded.length; index += 1) {
-    bytes[index] = decoded.charCodeAt(index);
-  }
-  return new Blob([bytes], { type: mime });
-}
-
-function downloadDataUrl(dataUrl, fileName) {
-  if (!dataUrl || typeof document === "undefined") return;
+function downloadBlob(blob, fileName) {
+  if (!blob || typeof document === "undefined") return;
+  const objectUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = dataUrl;
+  link.href = objectUrl;
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(objectUrl);
+}
+
+function parseCanvasCardToken(value) {
+  const upper = String(value || "").toUpperCase();
+  if (upper.startsWith("10")) {
+    return { rank: "10", suit: upper.slice(2) };
+  }
+  return { rank: upper.slice(0, 1), suit: upper.slice(1) };
+}
+
+function canvasRoundedRectPath(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  ctx.lineTo(x + r, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function fitCanvasText(ctx, text, maxWidth) {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let next = text;
+  while (next.length > 1 && ctx.measureText(`${next}...`).width > maxWidth) {
+    next = next.slice(0, -1);
+  }
+  return `${next}...`;
+}
+
+function drawCanvasTextPair(ctx, rank, suitSymbol, x, y, tone, { rotate = false } = {}) {
+  ctx.save();
+  ctx.fillStyle = tone;
+  ctx.translate(x, y);
+  if (rotate) {
+    ctx.rotate(Math.PI);
+  }
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.font = "700 11px system-ui, -apple-system, sans-serif";
+  ctx.fillText(rank, 0, 0);
+  if (suitSymbol) {
+    ctx.font = "400 11px system-ui, -apple-system, sans-serif";
+    ctx.fillText(suitSymbol, 0, 12);
+  }
+  ctx.restore();
+}
+
+function drawCanvasPokerCard(ctx, cardValue, x, y, width = 80, height = 112) {
+  const { rank, suit } = parseCanvasCardToken(cardValue);
+  const suitSymbol = suitText[suit] ?? "";
+  const isRed = suit === "H" || suit === "D";
+  const tone = isRed ? "#dc2626" : "#0f172a";
+  const border = isRed ? "#fca5a5" : "#cbd5e1";
+
+  ctx.save();
+  ctx.shadowColor = "rgba(15, 23, 42, 0.25)";
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 3;
+  canvasRoundedRectPath(ctx, x, y, width, height, 12);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  canvasRoundedRectPath(ctx, x, y, width, height, 12);
+  ctx.clip();
+  const bg = ctx.createRadialGradient(x + width * 0.82, y + height * 0.08, 1, x + width * 0.82, y + height * 0.08, height);
+  bg.addColorStop(0, "rgba(255,255,255,0.95)");
+  bg.addColorStop(0.45, "rgba(241,245,249,0.92)");
+  bg.addColorStop(1, "rgba(226,232,240,0.72)");
+  ctx.fillStyle = bg;
+  ctx.fillRect(x, y, width, height);
+  ctx.restore();
+
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = border;
+  canvasRoundedRectPath(ctx, x, y, width, height, 12);
+  ctx.stroke();
+
+  drawCanvasTextPair(ctx, rank, suitSymbol, x + 6, y + 4, tone);
+  drawCanvasTextPair(ctx, rank, suitSymbol, x + width - 6, y + height - 4, tone, { rotate: true });
+
+  ctx.save();
+  ctx.fillStyle = tone;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  if (rank === "A" && suitSymbol) {
+    ctx.font = "600 32px system-ui, -apple-system, sans-serif";
+    ctx.fillText(suitSymbol, x + width / 2, y + height / 2 + 2);
+  } else if (!suitSymbol) {
+    ctx.font = "600 26px system-ui, -apple-system, sans-serif";
+    ctx.fillText(rank, x + width / 2, y + height / 2 + 2);
+  } else {
+    ctx.font = "600 24px system-ui, -apple-system, sans-serif";
+    ctx.fillText(rank, x + width / 2, y + height / 2 - 9);
+    if (suitSymbol) {
+      ctx.font = "500 20px system-ui, -apple-system, sans-serif";
+      ctx.fillText(suitSymbol, x + width / 2, y + height / 2 + 17);
+    }
+  }
+  ctx.restore();
+}
+
+function drawShareCanvasPreview(canvas, meta, language, appTitle) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx || !meta) return false;
+
+  canvas.width = SHARE_CANVAS_WIDTH;
+  canvas.height = SHARE_CANVAS_HEIGHT;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const scale = SHARE_EXPORT_SCALE;
+  const panelX = SHARE_CAPTURE_MARGIN;
+  const panelY = SHARE_CAPTURE_MARGIN;
+  const panelWidth = SHARE_PANEL_WIDTH;
+  const panelHeight = SHARE_PANEL_HEIGHT;
+
+  const shareTitle = language === "zh-Hant" ? "牛牛分享牌局" : language === "zh-Hans" ? "牛牛分享牌局" : "Shared Hand";
+  const hostPath = typeof window !== "undefined" ? `${window.location.host}${window.location.pathname}` : "ngau";
+
+  ctx.save();
+  ctx.scale(scale, scale);
+
+  canvasRoundedRectPath(ctx, panelX, panelY, panelWidth, panelHeight, 30);
+  ctx.save();
+  ctx.clip();
+
+  const bg = ctx.createLinearGradient(
+    panelX - panelWidth * 0.12,
+    panelY - panelHeight * 0.06,
+    panelX + panelWidth * 1.02,
+    panelY + panelHeight * 1.04,
+  );
+  bg.addColorStop(0, "#1f644d");
+  bg.addColorStop(0.2, "#155341");
+  bg.addColorStop(0.54, "#093f32");
+  bg.addColorStop(0.82, "#052f27");
+  bg.addColorStop(1, "#03261f");
+  ctx.fillStyle = bg;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const depthWash = ctx.createLinearGradient(
+    panelX + panelWidth * 0.42,
+    panelY,
+    panelX + panelWidth * 0.96,
+    panelY + panelHeight * 0.08,
+  );
+  depthWash.addColorStop(0, "rgba(3, 28, 23, 0)");
+  depthWash.addColorStop(0.22, "rgba(2, 20, 17, 0.16)");
+  depthWash.addColorStop(0.62, "rgba(2, 17, 14, 0.42)");
+  depthWash.addColorStop(1, "rgba(1, 13, 12, 0.28)");
+  ctx.fillStyle = depthWash;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const glowA = ctx.createRadialGradient(
+    panelX + panelWidth * 0.12,
+    panelY + panelHeight * 0.2,
+    8,
+    panelX + panelWidth * 0.12,
+    panelY + panelHeight * 0.2,
+    panelWidth * 0.92,
+  );
+  glowA.addColorStop(0, "rgba(110, 255, 204, 0.07)");
+  glowA.addColorStop(0.55, "rgba(74, 222, 128, 0.025)");
+  glowA.addColorStop(1, "rgba(74, 222, 128, 0)");
+  ctx.fillStyle = glowA;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const glowB = ctx.createRadialGradient(
+    panelX + panelWidth * 0.72,
+    panelY + panelHeight * 0.5,
+    12,
+    panelX + panelWidth * 0.72,
+    panelY + panelHeight * 0.5,
+    panelWidth * 0.52,
+  );
+  glowB.addColorStop(0, "rgba(0, 10, 10, 0.42)");
+  glowB.addColorStop(0.65, "rgba(0, 8, 8, 0.24)");
+  glowB.addColorStop(1, "rgba(0, 8, 8, 0)");
+  ctx.fillStyle = glowB;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const glowC = ctx.createRadialGradient(
+    panelX + panelWidth * 0.08,
+    panelY + panelHeight * 0.78,
+    10,
+    panelX + panelWidth * 0.08,
+    panelY + panelHeight * 0.78,
+    panelWidth * 0.45,
+  );
+  glowC.addColorStop(0, "rgba(52, 211, 153, 0.04)");
+  glowC.addColorStop(1, "rgba(52, 211, 153, 0)");
+  ctx.fillStyle = glowC;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const glowD = ctx.createRadialGradient(
+    panelX + panelWidth * 0.9,
+    panelY + panelHeight * 0.1,
+    6,
+    panelX + panelWidth * 0.9,
+    panelY + panelHeight * 0.1,
+    panelWidth * 0.26,
+  );
+  glowD.addColorStop(0, "rgba(250, 204, 21, 0.045)");
+  glowD.addColorStop(0.6, "rgba(250, 204, 21, 0.015)");
+  glowD.addColorStop(1, "rgba(250, 204, 21, 0)");
+  ctx.fillStyle = glowD;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  const vignette = ctx.createRadialGradient(
+    panelX + panelWidth * 0.42,
+    panelY + panelHeight * 0.42,
+    panelWidth * 0.16,
+    panelX + panelWidth * 0.42,
+    panelY + panelHeight * 0.42,
+    panelWidth * 0.92,
+  );
+  vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
+  vignette.addColorStop(0.7, "rgba(0, 0, 0, 0.06)");
+  vignette.addColorStop(1, "rgba(0, 0, 0, 0.18)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+  ctx.restore();
+
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "rgba(255,255,255,0.25)";
+  canvasRoundedRectPath(ctx, panelX, panelY, panelWidth, panelHeight, 30);
+  ctx.stroke();
+
+  const innerX = panelX + 32;
+  const innerY = panelY + 32;
+  const innerW = panelWidth - 64;
+  const innerH = panelHeight - 64;
+  const headerHeight = 86;
+  const summaryHeight = 58;
+  const summaryY = innerY + innerH - summaryHeight;
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.font = "700 30px system-ui, -apple-system, sans-serif";
+  ctx.fillText(appTitle, innerX, innerY);
+
+  const rowY = innerY + 40;
+  ctx.font = "500 16px system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = "rgba(209, 250, 229, 0.92)";
+  ctx.fillText(shareTitle, innerX, rowY);
+  ctx.textAlign = "right";
+  ctx.font = "500 14px system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+  ctx.fillText(meta.timestamp, innerX + innerW, rowY + 1);
+
+  ctx.textAlign = "left";
+  ctx.font = "500 14px system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = "rgba(167, 243, 208, 0.75)";
+  ctx.fillText(hostPath, innerX, innerY + 60);
+
+  const centerTop = innerY + headerHeight;
+  const centerHeight = innerH - headerHeight - summaryHeight;
+  const cardWidth = 80;
+  const cardHeight = 112;
+  const rowGap = 16;
+  const colGap = 12;
+  const cardBlockHeight = cardHeight * 2 + rowGap;
+  const topRowY = centerTop + (centerHeight - cardBlockHeight) / 2;
+  const baseRowY = topRowY + cardHeight + rowGap;
+  const topRowWidth = cardWidth * 2 + colGap;
+  const baseRowWidth = cardWidth * 3 + colGap * 2;
+  const topRowX = panelX + (panelWidth - topRowWidth) / 2;
+  const baseRowX = panelX + (panelWidth - baseRowWidth) / 2;
+
+  meta.topCards.forEach((card, index) => {
+    drawCanvasPokerCard(ctx, card, topRowX + index * (cardWidth + colGap), topRowY, cardWidth, cardHeight);
+  });
+  meta.baseCards.forEach((card, index) => {
+    drawCanvasPokerCard(ctx, card, baseRowX + index * (cardWidth + colGap), baseRowY, cardWidth, cardHeight);
+  });
+
+  canvasRoundedRectPath(ctx, innerX, summaryY, innerW, summaryHeight, 16);
+  ctx.fillStyle = "rgba(0,0,0,0.30)";
+  ctx.fill();
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(253, 224, 71, 0.35)";
+  ctx.stroke();
+
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.font = "600 16px system-ui, -apple-system, sans-serif";
+  ctx.fillStyle = "#f8fafc";
+  const summaryText = fitCanvasText(ctx, meta.summary, innerW - 24);
+  ctx.fillText(summaryText, innerX + 12, summaryY + summaryHeight / 2);
+
+  ctx.restore();
+  return true;
 }
 
 function ArrangementRows({ pointCards, baseCards, pointLabel, baseLabel, isLight }) {
@@ -373,8 +670,6 @@ function ShareImageStage({ meta, language, appTitle }) {
   const shareTitle = language === "zh-Hant" ? "牛牛分享牌局" : language === "zh-Hans" ? "牛牛分享牌局" : "Shared Hand";
   return (
     <article className="relative h-[625px] w-[500px] overflow-hidden rounded-[30px] border border-white/25 bg-felt-pattern p-8 text-white">
-      <div className="pointer-events-none absolute -right-16 -top-20 h-40 w-40 rounded-full bg-amber-300/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -left-16 h-44 w-44 rounded-full bg-emerald-300/25 blur-3xl" />
       <div className="relative z-10 flex h-full flex-col">
         <div>
           <h3 className="font-title text-3xl tracking-[0.05em]">{appTitle}</h3>
@@ -481,11 +776,12 @@ function IconDownload() {
 }
 
 function ShareHandPanel({ result, t, language, isLight }) {
-  const shareStageRef = useRef(null);
+  const shareCanvasRef = useRef(null);
   const [feedback, setFeedback] = useState("");
   const [isSharing, setIsSharing] = useState(false);
   const [isRenderingPreview, setIsRenderingPreview] = useState(false);
-  const [shareImageDataUrl, setShareImageDataUrl] = useState("");
+  const [isPreviewReady, setIsPreviewReady] = useState(false);
+  const [shareImageBlob, setShareImageBlob] = useState(null);
 
   const shareMeta = useMemo(() => {
     if (!result?.cards || result.cards.length !== 5) return null;
@@ -514,31 +810,48 @@ function ShareHandPanel({ result, t, language, isLight }) {
   }, [result, t, language]);
 
   const renderShareImage = useCallback(async () => {
-    if (!shareMeta || !shareStageRef.current) return "";
+    const canvas = shareCanvasRef.current;
+    if (!shareMeta || !canvas) return null;
+    if (!isPreviewReady) {
+      const drawn = drawShareCanvasPreview(canvas, shareMeta, language, t.title);
+      setIsPreviewReady(drawn);
+      if (!drawn) return null;
+    }
     try {
       setIsRenderingPreview(true);
-      const dataUrl = await toPng(shareStageRef.current, {
-        cacheBust: true,
-        pixelRatio: 1.4
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob((nextBlob) => resolve(nextBlob), "image/png");
       });
-      setShareImageDataUrl(dataUrl);
-      return dataUrl;
+      if (!blob) {
+        setFeedback(t.shareFailed);
+        return null;
+      }
+      setShareImageBlob(blob);
+      return blob;
     } catch {
       setFeedback(t.shareFailed);
-      return "";
+      return null;
     } finally {
       setIsRenderingPreview(false);
     }
-  }, [shareMeta, t.shareFailed]);
+  }, [isPreviewReady, language, shareMeta, t.shareFailed, t.title]);
 
   useEffect(() => {
     setFeedback("");
     setIsSharing(false);
-    setShareImageDataUrl("");
-    if (shareMeta) {
-      void renderShareImage();
-    }
-  }, [shareMeta, renderShareImage]);
+    setShareImageBlob(null);
+    setIsPreviewReady(false);
+  }, [shareMeta]);
+
+  useEffect(() => {
+    if (!shareMeta || !shareCanvasRef.current) return;
+    const canvas = shareCanvasRef.current;
+    const frameId = window.requestAnimationFrame(() => {
+      const drawn = drawShareCanvasPreview(canvas, shareMeta, language, t.title);
+      setIsPreviewReady(drawn);
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [shareMeta, language, t.title]);
 
   const socialButtons = useMemo(
     () => [
@@ -550,7 +863,7 @@ function ShareHandPanel({ result, t, language, isLight }) {
   );
 
   async function ensureShareImage() {
-    if (shareImageDataUrl) return shareImageDataUrl;
+    if (shareImageBlob) return shareImageBlob;
     return renderShareImage();
   }
 
@@ -560,12 +873,11 @@ function ShareHandPanel({ result, t, language, isLight }) {
       setFeedback(t.shareFailed);
       return;
     }
-    const imageDataUrl = await ensureShareImage();
-    if (!imageDataUrl) return;
+    const imageBlob = await ensureShareImage();
+    if (!imageBlob) return;
 
     const fileName = `ngau-hand-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
-    const blob = dataUrlToBlob(imageDataUrl);
-    const imageFile = new File([blob], fileName, { type: "image/png" });
+    const imageFile = new File([imageBlob], fileName, { type: "image/png" });
     const canShareFile = typeof navigator.canShare !== "function" || navigator.canShare({ files: [imageFile] });
 
     try {
@@ -579,7 +891,7 @@ function ShareHandPanel({ result, t, language, isLight }) {
         setFeedback(t.shareDone);
         return;
       }
-      downloadDataUrl(imageDataUrl, fileName);
+      downloadBlob(imageBlob, fileName);
       setFeedback(t.shareDownloaded);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
@@ -589,13 +901,60 @@ function ShareHandPanel({ result, t, language, isLight }) {
     }
   }
 
-  async function downloadImage() {
+  async function savePhoto() {
     if (!shareMeta) return;
-    const imageDataUrl = await ensureShareImage();
-    if (!imageDataUrl) return;
+    const imageBlob = await ensureShareImage();
+    if (!imageBlob) return;
     const fileName = `ngau-hand-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
-    downloadDataUrl(imageDataUrl, fileName);
+    if (typeof navigator !== "undefined" && navigator.share) {
+      const imageFile = new File([imageBlob], fileName, { type: "image/png" });
+      const canShareFile = typeof navigator.canShare !== "function" || navigator.canShare({ files: [imageFile] });
+      if (canShareFile) {
+        try {
+          setIsSharing(true);
+          await navigator.share({ files: [imageFile] });
+          setFeedback(t.shareDone);
+          return;
+        } catch (error) {
+          if (!(error instanceof Error) || error.name !== "AbortError") {
+            setFeedback(t.shareFailed);
+          }
+          return;
+        } finally {
+          setIsSharing(false);
+        }
+      }
+    }
+
+    downloadBlob(imageBlob, fileName);
     setFeedback(t.shareDownloaded);
+  }
+
+  async function downloadPhoto() {
+    if (!shareMeta) return;
+    const imageBlob = await ensureShareImage();
+    if (!imageBlob) return;
+    const fileName = `ngau-hand-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
+    downloadBlob(imageBlob, fileName);
+    setFeedback(t.shareDownloaded);
+  }
+
+  async function handlePhotoAction() {
+    if (typeof navigator === "undefined") {
+      await downloadPhoto();
+      return;
+    }
+    const mobileFromUAData = typeof navigator.userAgentData?.mobile === "boolean" ? navigator.userAgentData.mobile : false;
+    const mobileFromUA = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+    const coarsePointer = typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia("(pointer: coarse)").matches : false;
+    const hasTouch = typeof navigator.maxTouchPoints === "number" && navigator.maxTouchPoints > 0;
+    const shouldSaveToPhoto = mobileFromUAData || mobileFromUA || (coarsePointer && hasTouch);
+
+    if (shouldSaveToPhoto) {
+      await savePhoto();
+      return;
+    }
+    await downloadPhoto();
   }
 
   return (
@@ -617,15 +976,26 @@ function ShareHandPanel({ result, t, language, isLight }) {
         </div>
         <p className={isLight ? "mt-1 text-sm text-slate-700" : "mt-1 text-sm text-emerald-100/85"}>{t.sharePanelBody}</p>
 
-        {shareImageDataUrl ? (
+        {shareMeta ? (
           <div className={isLight ? "mt-3 overflow-hidden rounded-2xl border border-slate-300 bg-white p-1" : "mt-3 overflow-hidden rounded-2xl border border-white/20 bg-black/20 p-1"}>
-            <img src={shareImageDataUrl} alt={t.sharePreviewAlt} className="mx-auto max-h-72 w-full rounded-xl object-contain" />
+            <div className="flex h-[18.5rem] items-center justify-center overflow-hidden rounded-xl">
+              <canvas
+                ref={shareCanvasRef}
+                width={SHARE_CANVAS_WIDTH}
+                height={SHARE_CANVAS_HEIGHT}
+                aria-label={t.sharePreviewAlt}
+                className="mx-auto h-full w-auto max-w-full object-contain"
+              />
+            </div>
           </div>
         ) : (
           <div className={isLight ? "mt-3 flex h-44 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 text-xs text-slate-500" : "mt-3 flex h-44 items-center justify-center rounded-2xl border border-dashed border-white/20 bg-black/20 text-xs text-emerald-100/60"}>
             {isRenderingPreview ? t.shareRendering : t.sharePreparing}
           </div>
         )}
+        {shareMeta && !isPreviewReady ? (
+          <p className={isLight ? "mt-2 text-xs text-slate-500" : "mt-2 text-xs text-emerald-100/65"}>{t.sharePreparing}</p>
+        ) : null}
 
         <p className={isLight ? "mt-3 text-xs tracking-[0.14em] text-slate-500" : "mt-3 text-xs tracking-[0.14em] text-emerald-100/65"}>{t.shareSocialHint}</p>
         <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -634,7 +1004,7 @@ function ShareHandPanel({ result, t, language, isLight }) {
               key={item.key}
               type="button"
               onClick={shareImage}
-              disabled={isSharing || isRenderingPreview || !shareMeta}
+              disabled={isSharing || isRenderingPreview || !shareMeta || !isPreviewReady}
               aria-label={item.label}
               title={item.label}
               className={`flex h-11 w-11 items-center justify-center rounded-2xl shadow-md shadow-black/20 transition active:scale-[0.97] disabled:opacity-45 ${item.tone}`}
@@ -645,7 +1015,7 @@ function ShareHandPanel({ result, t, language, isLight }) {
           <button
             type="button"
             onClick={shareImage}
-            disabled={isSharing || isRenderingPreview || !shareMeta}
+            disabled={isSharing || isRenderingPreview || !shareMeta || !isPreviewReady}
             aria-label={t.shareAction}
             title={t.shareAction}
             className={isLight ? "flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-700 shadow-md shadow-slate-400/25 active:scale-[0.97] disabled:opacity-45" : "flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/30 text-emerald-100 shadow-md shadow-black/30 active:scale-[0.97] disabled:opacity-45"}
@@ -654,8 +1024,8 @@ function ShareHandPanel({ result, t, language, isLight }) {
           </button>
           <button
             type="button"
-            onClick={downloadImage}
-            disabled={isRenderingPreview || !shareMeta}
+            onClick={handlePhotoAction}
+            disabled={isSharing || isRenderingPreview || !shareMeta || !isPreviewReady}
             aria-label={t.shareDownloadImage}
             title={t.shareDownloadImage}
             className={isLight ? "flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-700 shadow-md shadow-slate-400/25 active:scale-[0.97] disabled:opacity-45" : "flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-black/30 text-emerald-100 shadow-md shadow-black/30 active:scale-[0.97] disabled:opacity-45"}
@@ -666,13 +1036,6 @@ function ShareHandPanel({ result, t, language, isLight }) {
 
         {feedback ? <p className={isLight ? "mt-2 text-xs font-semibold text-emerald-700" : "mt-2 text-xs font-semibold text-emerald-200"}>{feedback}</p> : null}
       </div>
-      {shareMeta ? (
-        <div className="pointer-events-none fixed left-[-200vw] top-0 opacity-0" aria-hidden="true">
-          <div ref={shareStageRef} className="inline-flex bg-transparent p-4">
-            <ShareImageStage meta={shareMeta} language={language} appTitle={t.title} />
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }
