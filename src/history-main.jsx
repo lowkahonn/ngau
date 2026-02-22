@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import HistoryApp from "./HistoryApp";
+import { initializeGoogleAnalytics } from "./features/shared/analytics/firebaseAnalytics";
 import "./index.css";
 
 function applyRuntimeSeoFallbacks() {
@@ -37,6 +38,7 @@ function registerServiceWorker() {
 
 applyRuntimeSeoFallbacks();
 registerServiceWorker();
+void initializeGoogleAnalytics();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
